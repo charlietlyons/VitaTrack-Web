@@ -54,8 +54,8 @@ const Login = () => {
   return !isLoggedIn ? (
     <div>
       <TextField
-        id="username"
-        label="User"
+        id="email"
+        label="Email Address"
         onChange={usernameChangeHandler}
         onKeyDown={submitOnEnterHandler}
       ></TextField>
