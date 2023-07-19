@@ -4,8 +4,8 @@
   "description": "A web interface for the VitaTrackAPI",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack serve --mode development ",
+    "test": "jest --watchAll --env=jsdom"
   },
   "author": "Charlotte Lyons",
   "license": "ISC",
@@ -13,19 +13,33 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.13.5",
+    "history": "^5.3.0",
     "html-webpack-plugin": "^5.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.11.2",
+    "styled-components": "^6.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
     "@babel/preset-env": "^7.22.4",
     "@babel/preset-react": "^7.22.3",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@webpack-cli/serve": "^2.0.5",
     "babel-loader": "^9.1.2",
     "dotenv": "^16.1.3",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "jsdom": "^22.1.0",
     "webpack": "^5.85.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/*.spec.js"
+    ]
   }
 }
