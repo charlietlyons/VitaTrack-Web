@@ -4,8 +4,9 @@ const headers = {
 };
 
 const BackendClient = {
-  login: (username, password, loginSuccessHandler, loginFailureHandler) => {
-    fetch(`${url}/verify-user`, {
+  login: (username, password, loginSuccessHandler, errorHandler) => {
+    try {
+      fetch(`${url}/verify-user`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify({ user: username, password: password }),
@@ -14,15 +15,19 @@ const BackendClient = {
         if (response.status === 200) {
           return response.json();
         } else {
-          loginFailureHandler("Invalid username or password");
+          errorHandler("There was an error reaching the server. Please try again later.");
         }
       })
       .then((data) => {
         if (data) {
           localStorage.setItem("token", data?.token);
           loginSuccessHandler(true);
+          errorHandler("");
         }
       });
+    } catch (e) {
+      errorHandler("Invalid username or password");
+    }
   },
 
   register: (formData, registerSuccessHandler, registerFailureHandler) => {

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
 import { Heading1 } from "./common/Headings";
@@ -13,7 +12,13 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
+  const logout = useCallback(
+    () => {
+            localStorage.removeItem("token");
+            setIsLoggedIn(false);
+          },
+    []
+  );
 
   const usernameChangeHandler = useCallback(
     (e) => {
@@ -83,10 +88,7 @@ const Login = () => {
       ) : (
         <>
           <Heading1>Logged in</Heading1>
-          <Button onClick={() => {
-            localStorage.removeItem("token")
-            navigate("/")
-          }}>Logout</Button>
+          <Button onClick={logout}>Logout</Button>
         </>
       )}
       {error ? <output>{error}</output> : <></>}
