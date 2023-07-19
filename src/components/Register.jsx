@@ -1,8 +1,9 @@
 import React, { useCallback, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Paper, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { Heading1 } from "./common/Headings";
 import { StyledTextField } from "./common/Inputs";
+import { StyledPaper } from "./common/Containers";
 import RegisterFormReducer from "../reducers/RegisterFormReducer";
 import BackendClient from "../client/BackendClient";
 
@@ -68,14 +69,7 @@ const Register = () => {
   );
 
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        margin: "auto",
-        width: "50%",
-        flexDirection: "column",
-      }}
-    >
+    <StyledPaper>
       <Heading1>Register</Heading1>
       <StyledTextField
         id={SET_FIRST}
@@ -126,7 +120,7 @@ const Register = () => {
         Login
       </Button>
       {error ? <output>{error}</output> : <></>}
-    </Paper>
+    </StyledPaper>
   );
 };
 

@@ -1,12 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
+import { Heading1 } from "./common/Headings";
+import { StyledTextField } from "./common/Inputs";
+import { StyledPaper } from "./common/Containers";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const usernameChangeHandler = useCallback(
     (e) => {
@@ -51,31 +58,40 @@ const Login = () => {
     BackendClient.verifyToken(localStorage.getItem("token"), setIsLoggedIn);
   }, [setIsLoggedIn]);
 
-  return !isLoggedIn ? (
-    <div>
-      <TextField
-        id="email"
-        label="Email Address"
-        onChange={usernameChangeHandler}
-        onKeyDown={submitOnEnterHandler}
-      ></TextField>
-      <TextField
-        id="password"
-        label="Password"
-        type="password"
-        onChange={passwordChangeHandler}
-        onKeyDown={submitOnEnterHandler}
-      ></TextField>
-      <Button variant="contained" onClick={submitHandler}>
-        Login
-      </Button>
+  return (
+    <StyledPaper>
+      { !isLoggedIn ? (
+      <>
+        <Heading1>Login</Heading1>
+        <StyledTextField
+          id="email"
+          label="Email Address"
+          onChange={usernameChangeHandler}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>
+        <StyledTextField
+          id="password"
+          label="Password"
+          type="password"
+          onChange={passwordChangeHandler}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>
+        <Button variant="contained" onClick={submitHandler}>
+          Login
+        </Button>
+      </>
+      ) : (
+        <>
+          <Heading1>Logged in</Heading1>
+          <Button onClick={() => {
+            localStorage.removeItem("token")
+            navigate("/")
+          }}>Logout</Button>
+        </>
+      )}
       {error ? <output>{error}</output> : <></>}
-    </div>
-  ) : (
-    <div>
-      <h1>Logged in</h1>
-    </div>
-  );
+    </StyledPaper>
+  )
 };
 
 export default Login;
