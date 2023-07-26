@@ -3,8 +3,7 @@ import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
 import { Heading1 } from "./common/Headings";
 import { StyledTextField } from "./common/Inputs";
-import { StyledPaper } from "./common/Containers";
-
+import { FormContainer } from "./common/Containers";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -12,13 +11,10 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
 
-  const logout = useCallback(
-    () => {
-            localStorage.removeItem("token");
-            setIsLoggedIn(false);
-          },
-    []
-  );
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  }, []);
 
   const usernameChangeHandler = useCallback(
     (e) => {
@@ -64,36 +60,40 @@ const Login = () => {
   }, [setIsLoggedIn]);
 
   return (
-    <StyledPaper>
-      { !isLoggedIn ? (
-      <>
-        <Heading1>Login</Heading1>
-        <StyledTextField
-          id="email"
-          label="Email Address"
-          onChange={usernameChangeHandler}
-          onKeyDown={submitOnEnterHandler}
-        ></StyledTextField>
-        <StyledTextField
-          id="password"
-          label="Password"
-          type="password"
-          onChange={passwordChangeHandler}
-          onKeyDown={submitOnEnterHandler}
-        ></StyledTextField>
-        <Button variant="contained" onClick={submitHandler}>
-          Login
-        </Button>
-      </>
+    <>
+      {!isLoggedIn ? (
+        <FormContainer
+          title={!isLoggedIn ? <Heading1>Login</Heading1> : <></>}
+          formFields={[
+            <StyledTextField
+              id="email"
+              label="Email Address"
+              onChange={usernameChangeHandler}
+              onKeyDown={submitOnEnterHandler}
+            ></StyledTextField>,
+            <StyledTextField
+              id="password"
+              label="Password"
+              type="password"
+              onChange={passwordChangeHandler}
+              onKeyDown={submitOnEnterHandler}
+            ></StyledTextField>,
+          ]}
+          submitButton={
+            <Button variant="contained" onClick={submitHandler}>
+              Login
+            </Button>
+          }
+          error={error}
+        />
       ) : (
         <>
           <Heading1>Logged in</Heading1>
           <Button onClick={logout}>Logout</Button>
         </>
       )}
-      {error ? <output>{error}</output> : <></>}
-    </StyledPaper>
-  )
+    </>
+  );
 };
 
 export default Login;

@@ -7,24 +7,26 @@ const BackendClient = {
   login: (username, password, loginSuccessHandler, errorHandler) => {
     try {
       fetch(`${url}/verify-user`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({ user: username, password: password }),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          errorHandler("There was an error reaching the server. Please try again later.");
-        }
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ user: username, password: password }),
       })
-      .then((data) => {
-        if (data) {
-          localStorage.setItem("token", data?.token);
-          loginSuccessHandler(true);
-          errorHandler("");
-        }
-      });
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            errorHandler(
+              "There was an error reaching the server. Please try again later."
+            );
+          }
+        })
+        .then((data) => {
+          if (data) {
+            localStorage.setItem("token", data?.token);
+            loginSuccessHandler(true);
+            errorHandler("");
+          }
+        });
     } catch (e) {
       errorHandler("Invalid username or password");
     }
@@ -45,17 +47,26 @@ const BackendClient = {
   },
 
   verifyToken: (token, callback) => {
-    fetch(`${url}/verify-token`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({ token: token }),
-    }).then((response) => {
-      if (response.status === 200) {
-        callback(true);
-      } else {
-        callback(false);
-      }
-    });
+    try {
+      fetch(`${url}/verify-token`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ token: token }),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            callback(true);
+          } else {
+            callback(false);
+          }
+        })
+        .catch((error) => {
+          callback(false);
+        });
+    } catch (e) {
+      console.log("Could not verify token");
+      callback(false);
+    }
   },
 };
 

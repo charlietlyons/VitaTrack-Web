@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { Heading1 } from "./common/Headings";
 import { StyledTextField } from "./common/Inputs";
-import { StyledPaper } from "./common/Containers";
+import { FormContainer } from "./common/Containers";
 import RegisterFormReducer from "../reducers/RegisterFormReducer";
 import BackendClient from "../client/BackendClient";
 
@@ -69,58 +69,61 @@ const Register = () => {
   );
 
   return (
-    <StyledPaper>
-      <Heading1>Register</Heading1>
-      <StyledTextField
-        id={SET_FIRST}
-        label="First Name"
-        value={formData.first}
-        onChange={(event) => formChangeHandler(event)}
-        onKeyDown={submitOnEnterHandler}
-        width="50%"
-      ></StyledTextField>
-      <StyledTextField
-        id={SET_LAST}
-        label="Last Name"
-        value={formData.last}
-        onChange={(event) => formChangeHandler(event)}
-        onKeyDown={submitOnEnterHandler}
-      ></StyledTextField>
-      <StyledTextField
-        id={SET_PASSWORD}
-        value={formData.password}
-        label="Password"
-        type="password"
-        onChange={(event) => formChangeHandler(event)}
-        onKeyDown={submitOnEnterHandler}
-      ></StyledTextField>
-      <StyledTextField
-        id={SET_CONFIRM_PASSWORD}
-        value={formData.passwordConfirmation}
-        label="Password Confirmation"
-        type="password"
-        onChange={(event) => formChangeHandler(event)}
-        onKeyDown={submitOnEnterHandler}
-      ></StyledTextField>
-      <StyledTextField
-        id={SET_PHONE}
-        label="Phone"
-        pattern="^\+?(\d{1,3})?[-. (]?\d{3}[-. )]?\d{3}[-. ]?\d{4}$"
-        onChange={(event) => formChangeHandler(event)}
-        onKeyDown={submitOnEnterHandler}
-      ></StyledTextField>
-      <StyledTextField
-        id={SET_EMAIL}
-        label="Email Address"
-        pattern="^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,3}$"
-        onChange={(event) => formChangeHandler(event)}
-        onKeyDown={submitOnEnterHandler}
-      ></StyledTextField>
-      <Button variant="contained" onClick={submitHandler}>
-        Login
-      </Button>
-      {error ? <output>{error}</output> : <></>}
-    </StyledPaper>
+    <FormContainer
+      title={<Heading1>Register</Heading1>}
+      formFields={[
+        <StyledTextField
+          id={SET_FIRST}
+          label="First Name"
+          value={formData.first}
+          onChange={(event) => formChangeHandler(event)}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>,
+        <StyledTextField
+          id={SET_LAST}
+          label="Last Name"
+          value={formData.last}
+          onChange={(event) => formChangeHandler(event)}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>,
+        <StyledTextField
+          id={SET_PASSWORD}
+          value={formData.password}
+          label="Password"
+          type="password"
+          onChange={(event) => formChangeHandler(event)}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>,
+        <StyledTextField
+          id={SET_CONFIRM_PASSWORD}
+          value={formData.passwordConfirmation}
+          label="Password Confirmation"
+          type="password"
+          onChange={(event) => formChangeHandler(event)}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>,
+        <StyledTextField
+          id={SET_PHONE}
+          label="Phone"
+          pattern="^\+?(\d{1,3})?[-. (]?\d{3}[-. )]?\d{3}[-. ]?\d{4}$"
+          onChange={(event) => formChangeHandler(event)}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>,
+        <StyledTextField
+          id={SET_EMAIL}
+          label="Email Address"
+          pattern="^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,3}$"
+          onChange={(event) => formChangeHandler(event)}
+          onKeyDown={submitOnEnterHandler}
+        ></StyledTextField>,
+      ]}
+      submitButton={
+        <Button variant="contained" onClick={submitHandler}>
+          Register
+        </Button>
+      }
+      error={error}
+    />
   );
 };
 
