@@ -21,8 +21,8 @@ const BackendClient = {
           }
         })
         .then((data) => {
-          if (data) {
-            localStorage.setItem("token", data?.token);
+          if (data && data.token) {
+            localStorage.setItem("token", data.token);
             loginSuccessHandler(true);
             errorHandler("");
           }

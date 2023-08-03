@@ -39,9 +39,17 @@ const Register = () => {
     (e) => {
       e.preventDefault();
       // add phone, email validation
-      console.log(formData.password + ":" + formData.passwordConfirmation);
       if (password !== passwordConfirmation) {
         setError("Passwords do not match");
+      } else if(
+        formData.first === "" ||
+        formData.last === "" ||
+        formData.email === "" ||
+        formData.password === "" ||
+        formData.passwordConfirmation === "" ||
+        formData.phone === ""
+      ) {
+        setError("Form is incomplete");
       } else {
         setError("");
         const body = {
@@ -51,7 +59,6 @@ const Register = () => {
           password: formData.password,
           phone: formData.phone,
         };
-        localStorage.setItem("token", "");
         BackendClient.register(body, () => navigate("/login"), setError);
       }
     },
@@ -61,7 +68,6 @@ const Register = () => {
   const submitOnEnterHandler = useCallback(
     (e) => {
       if (e.keyCode === 13) {
-        console.log("submit");
         submitHandler(e);
       }
     },
