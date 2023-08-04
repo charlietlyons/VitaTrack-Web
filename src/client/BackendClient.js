@@ -64,7 +64,6 @@ const BackendClient = {
           callback(false);
         });
     } catch (e) {
-      console.log("Could not verify token");
       callback(false);
     }
   },

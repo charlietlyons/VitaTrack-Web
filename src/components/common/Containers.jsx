@@ -18,8 +18,8 @@ export const FormContainer = (props) => {
         <Card>
           <CardHeader title={props.title} />
           <CardContent>
-            {props.formFields.map((field) => {
-              return <Grid item>{field}</Grid>;
+            {props.formFields.map((field, index) => {
+              return <Grid item key={index}>{field}</Grid>;
             })}
             <Grid item xs={12}>
               {props.submitButton}
