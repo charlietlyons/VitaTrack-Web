@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "user": "test",
+      "password": "password"
+    }
+  ],
+  "verify-token": {
+    "token": ""
+  }
+}

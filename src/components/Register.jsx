@@ -39,9 +39,7 @@ const Register = () => {
     (e) => {
       e.preventDefault();
       // add phone, email validation
-      if (password !== passwordConfirmation) {
-        setError("Passwords do not match");
-      } else if(
+      if (
         formData.first === "" ||
         formData.last === "" ||
         formData.email === "" ||
@@ -50,6 +48,8 @@ const Register = () => {
         formData.phone === ""
       ) {
         setError("Form is incomplete");
+      } else if (password !== passwordConfirmation) {
+        setError("Passwords do not match");
       } else {
         setError("");
         const body = {
@@ -103,7 +103,7 @@ const Register = () => {
         <StyledTextField
           id={SET_CONFIRM_PASSWORD}
           value={formData.passwordConfirmation}
-          label="Password Confirmation"
+          label="Confirm Password"
           type="password"
           onChange={(event) => formChangeHandler(event)}
           onKeyDown={submitOnEnterHandler}

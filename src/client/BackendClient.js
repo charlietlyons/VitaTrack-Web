@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const url = "http://localhost:3000";
 const headers = {
   "Content-Type": "application/json",
@@ -5,67 +7,67 @@ const headers = {
 
 const BackendClient = {
   login: (username, password, loginSuccessHandler, errorHandler) => {
-    try {
-      fetch(`${url}/verify-user`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({ user: username, password: password }),
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            errorHandler(
-              "There was an error reaching the server. Please try again later."
-            );
-          }
-        })
-        .then((data) => {
-          if (data && data.token) {
-            localStorage.setItem("token", data.token);
+    axios
+      .post(
+        `${url}/verify-user`,
+        { user: username, password: password },
+        {
+          headers: headers,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data && response.data.token) {
+            localStorage.setItem("token", response.data.token);
             loginSuccessHandler(true);
             errorHandler("");
           }
-        });
-    } catch (e) {
-      errorHandler("Invalid username or password");
-    }
+        } else {
+          errorHandler(
+            "There was an error reaching the server. Please try again later."
+          );
+        }
+      })
+      .catch((error) => {
+        errorHandler("Invalid credentials");
+      });
   },
 
   register: (formData, registerSuccessHandler, registerFailureHandler) => {
-    fetch(`${url}/register-user`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(formData),
-    }).then((response) => {
-      if (response.status === 200) {
-        registerSuccessHandler();
-      } else {
-        registerFailureHandler("Unable to register user");
-      }
-    });
+    axios
+      .post(`${url}/register-user`, formData, {
+        headers: headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          registerSuccessHandler();
+        }
+        registerFailureHandler("An error occurred. Please try again later.");
+      })
+      .catch((error) => {
+        registerFailureHandler("Registration failed. Email already in use.");
+      });
   },
 
   verifyToken: (token, callback) => {
-    try {
-      fetch(`${url}/verify-token`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({ token: token }),
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            callback(true);
-          } else {
-            callback(false);
-          }
-        })
-        .catch((error) => {
+    axios
+      .post(
+        `${url}/verify-token`,
+        { token: token },
+        {
+          headers: headers,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          callback(true);
+        } else {
           callback(false);
-        });
-    } catch (e) {
-      callback(false);
-    }
+        }
+      })
+      .catch((error) => {
+        callback(false);
+      });
   },
 };
 
