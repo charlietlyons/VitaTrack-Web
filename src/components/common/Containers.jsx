@@ -11,6 +11,14 @@ export const StyledPaper = styled(Paper)`
   }
 `;
 
+export const PageContainer = (props) => {
+  return (
+    <Grid container justifyContent="center" alignItems="center">
+      <Grid item xs={8}>{props.children}</Grid>
+    </Grid>
+  )
+}
+
 export const FormContainer = (props) => {
   return (
     <Grid container justifyContent="center" alignItems="center">

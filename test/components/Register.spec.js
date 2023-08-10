@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "@jest/globals";
 import "@testing-library/jest-dom";
 import Register from "../../src/components/Register";
-import { BrowserRouter, BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 describe("Register", () => {
   beforeEach(() => {

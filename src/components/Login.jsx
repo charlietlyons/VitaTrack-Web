@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
 import { Heading1 } from "./common/Headings";
 import { StyledTextField } from "./common/Inputs";
-import { FormContainer } from "./common/Containers";
+import { FormContainer, PageContainer } from "./common/Containers";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -87,10 +87,10 @@ const Login = () => {
           error={error}
         />
       ) : (
-        <>
+        <PageContainer>
           <Heading1>Logged in</Heading1>
           <Button onClick={logout}>Logout</Button>
-        </>
+        </PageContainer>
       )}
     </>
   );
