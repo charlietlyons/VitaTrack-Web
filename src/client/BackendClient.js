@@ -6,11 +6,11 @@ const headers = {
 };
 
 const BackendClient = {
-  login: (username, password, loginSuccessHandler, errorHandler) => {
+  login: (email, password, loginSuccessHandler, errorHandler) => {
     axios
       .post(
         `${url}/verify-user`,
-        { user: username, password: password },
+        { email: email, password: password },
         {
           headers: headers,
         }

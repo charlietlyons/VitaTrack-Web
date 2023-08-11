@@ -7,9 +7,9 @@ server.use(jsonServer.bodyParser);
 server.use(middlewares);
 
 function handleLogin(req, res) {
-  const { user, password } = req.body;
+  const { email, password } = req.body;
 
-  const userRecord = router.db.get("users").find({ user, password }).value();
+  const userRecord = router.db.get("users").find({ email, password }).value();
 
   if (userRecord) {
     res.json({ token: "someToken" });
