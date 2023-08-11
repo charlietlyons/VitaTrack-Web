@@ -1,20 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
 import { Heading1 } from "./common/Headings";
 import { StyledTextField } from "./common/Inputs";
 import { FormContainer, PageContainer } from "./common/Containers";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
 
-  const logout = useCallback(() => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  }, []);
+  const authContext = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn } = authContext;
 
   const usernameChangeHandler = useCallback(
     (e) => {
@@ -55,10 +53,6 @@ const Login = () => {
     [submitHandler]
   );
 
-  useEffect(() => {
-    BackendClient.verifyToken(localStorage.getItem("token"), setIsLoggedIn);
-  }, [setIsLoggedIn]);
-
   return (
     <>
       {!isLoggedIn ? (
@@ -89,7 +83,6 @@ const Login = () => {
       ) : (
         <PageContainer>
           <Heading1>Logged in</Heading1>
-          <Button onClick={logout}>Logout</Button>
         </PageContainer>
       )}
     </>

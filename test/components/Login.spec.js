@@ -1,12 +1,15 @@
-import { fireEvent, screen, render } from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "@jest/globals";
 import "@testing-library/jest-dom";
 import Login from "../../src/components/Login";
 import React from "react";
+import { MockAuthContextProvider } from "../../test/context/MockAuthContext";
 
 describe("Login", () => {
   beforeEach(() => {
-    render(<Login />);
+    render(<MockAuthContextProvider>
+      <Login />
+    </MockAuthContextProvider>);
   });
 
   it("should render login text and inputs", () => {
@@ -24,15 +27,7 @@ describe("Login", () => {
   });
 
   it("should display Logged In component when isLoggedIn is true", async () => {
-    const emailInputElement = screen.getByLabelText("Email Address");
-    const passwordInputElement = screen.getByLabelText("Password");
-    const submitButtonElement = screen.getByRole("button", {
-      name: /Login/i,
-    });
-
-    fireEvent.change(emailInputElement, { target: { value: "test" } });
-    fireEvent.change(passwordInputElement, { target: { value: "password" } });
-    fireEvent.click(submitButtonElement);
+    fillLoginForm();
 
     const loggedInHeaderElement = await screen.findByRole("heading", {
       name: /Logged In/i,
@@ -41,3 +36,15 @@ describe("Login", () => {
     expect(loggedInHeaderElement).toHaveTextContent("Logged in");
   });
 });
+
+function fillLoginForm() {
+    const emailElement = screen.getByLabelText("Email Address");
+    const passwordElement = screen.getByLabelText("Password");
+    const submitButtonElement = screen.getByRole("button", {
+      name: /Login/i,
+    });
+
+    fireEvent.change(emailElement, { target: { value: "test" } });
+    fireEvent.change(passwordElement, { target: { value: "password" } });
+    fireEvent.click(submitButtonElement);
+}

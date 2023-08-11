@@ -3,10 +3,11 @@ import { ListItem, ListItemIcon, ListItemText, ListItemButton } from "@mui/mater
 import { styled } from "@mui/material/styles";
 
 const SidebarListItem = (props) => {
-    const { title, icon, button, onClick, active } = props;
+    const { title, icon, button, onClick, active, sx } = props;
 
     const activeStyling = {
         backgroundColor: '#f5f5f5',
+        ...sx,
         '&:hover': {
             backgroundColor: '#f5f5f5',
     }};

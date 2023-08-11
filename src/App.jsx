@@ -17,9 +17,12 @@ const router = createBrowserRouter([
                 path: "register",
                 element: <Register />,
             },
+            {
+                path: "logout",
+                element: <Login />,
+            }
         ]
     },
-    
 ]);
 
 const App = () => {

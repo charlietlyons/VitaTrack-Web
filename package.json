@@ -8,6 +8,7 @@
     "dev": "concurrently \"npm run stub-server\" \"npm run start:dev\"",
     "start:dev": "webpack serve --mode development",
     "stub-server": "kill-port 3000 && node stubserver.js",
+    "kill-stub-server": "kill-port 3000",
     "test": "concurrently \"npm run stub-server\" \"jest --env=jsdom\"",
     "test:watch": "concurrently \"npm run stub-server\" \"jest --watchAll --env=jsdom\""
   },
