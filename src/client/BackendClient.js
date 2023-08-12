@@ -49,6 +49,22 @@ const BackendClient = {
       });
   },
 
+  accountDetails: (successHandler, failureHandler) => {
+    axios
+      .get(`${url}/account-details`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        successHandler(response.data);
+      })
+      .catch((error) => {
+        failureHandler(error);
+      });
+  },
+
   verifyToken: (token, callback) => {
     axios
       .post(
