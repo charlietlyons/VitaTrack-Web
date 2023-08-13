@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Layout from "./components/Layout";
 import AccountDetails from "./components/AccountDetails";
+import DailyStats from "./components/DailyStats";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "account",
         element: <AccountDetails />,
+      },
+      {
+        path: "daily",
+        element: <DailyStats/>
       },
     ],
   },
