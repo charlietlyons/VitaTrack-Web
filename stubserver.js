@@ -31,10 +31,7 @@ function handleTokenVerification(req, res) {
 function handleRegistration(req, res) {
   const { email, password } = req.body;
 
-  const userRecord = router.db
-    .get("users")
-    .find({ user: email, password })
-    .value();
+  const userRecord = router.db.get("users").find({ email, password }).value();
 
   if (userRecord) {
     res.status(401).json({ error: "User already exists" });
@@ -43,6 +40,23 @@ function handleRegistration(req, res) {
   }
 }
 
+function handleAccountDetails(req, res) {
+  const userRecord = router.db
+    .get("users")
+    .find({
+      email: "test",
+      password: "password",
+    })
+    .value();
+
+  if (userRecord) {
+    res.status(200).json(userRecord);
+  } else {
+    res.status(404).json({ error: "Not found" });
+  }
+}
+
+server.get("/account-details", handleAccountDetails);
 server.post("/register-user", handleRegistration);
 server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);

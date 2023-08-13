@@ -2,7 +2,10 @@
   "users": [
     {
       "email": "test",
-      "password": "password"
+      "password": "password",
+      "phone": "(555) 555-5555",
+      "first": "first",
+      "last": "last"
     }
   ],
   "verify-token": {
