@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Layout from "./components/Layout";
@@ -9,6 +9,10 @@ import DailyStats from "./components/DailyStats";
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Navigate to="/vitatrack/daily" replace={true} />,
+  },
+  {
+    path: "/vitatrack",
     element: <Layout />,
     children: [
       {
@@ -29,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "daily",
-        element: <DailyStats/>
+        element: <DailyStats />,
       },
     ],
   },

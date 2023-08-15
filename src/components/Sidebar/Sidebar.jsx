@@ -23,18 +23,18 @@ const Sidebar = (props) => {
       button: true,
       icon: <LogoutTwoToneIcon />,
       onClick: () => {
-        navigate("/login");
+        navigate("/vitatrack/login");
       },
-      active: location.pathname === "/login" ? "active" : "",
+      active: location.pathname === "/vitatrack/login" ? "active" : "",
     },
     {
       title: "Register",
       button: true,
       icon: <HowToRegTwoToneIcon />,
       onClick: () => {
-        navigate("/register");
+        navigate("/vitatrack/register");
       },
-      active: location.pathname === "/register" ? "active" : "",
+      active: location.pathname === "/vitatrack/register" ? "active" : "",
     },
   ];
   const loggedInItems = [
@@ -61,7 +61,7 @@ const Sidebar = (props) => {
       onClick: () => {
         localStorage.removeItem("token");
         authContext.setIsLoggedIn(false);
-        navigate("/login");
+        navigate("/vitatrack/login");
       },
     },
   ];

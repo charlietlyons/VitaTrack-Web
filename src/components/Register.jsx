@@ -59,7 +59,7 @@ const Register = () => {
           password: formData.password,
           phone: formData.phone,
         };
-        BackendClient.register(body, () => navigate("/login"), setError);
+        BackendClient.register(body, () => navigate("/vitatrack/login"), setError);
       }
     },
     [formData]
