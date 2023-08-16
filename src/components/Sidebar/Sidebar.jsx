@@ -43,7 +43,7 @@ const Sidebar = (props) => {
       button: true,
       icon: <TodayTwoToneIcon />,
       onClick: () => {
-        navigate("/daily");
+        navigate("/vitatrack/daily");
       },
     },
     {
@@ -51,7 +51,7 @@ const Sidebar = (props) => {
       button: true,
       icon: <PermIdentityTwoToneIcon />,
       onClick: () => {
-        navigate("/account");
+        navigate("/vitatrack/account");
       },
     },
     {

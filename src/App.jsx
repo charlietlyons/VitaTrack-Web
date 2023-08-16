@@ -8,7 +8,7 @@ import DailyStats from "./components/DailyStats";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "*",
     element: <Navigate to="/vitatrack/daily" replace={true} />,
   },
   {
