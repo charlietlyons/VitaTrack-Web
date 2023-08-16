@@ -1,4 +1,4 @@
-// Register Form Reducer Costants
+// Register Form Reducer Constants
 export const SET_FIRST = "firstname";
 export const SET_LAST = "lastname";
 export const SET_EMAIL = "email";

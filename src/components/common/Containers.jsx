@@ -14,25 +14,34 @@ export const StyledPaper = styled(Paper)`
 export const PageContainer = (props) => {
   return (
     <Grid container justifyContent="center" alignItems="center">
-      <Grid item xs={8}>{props.children}</Grid>
+      <Grid item xs={8}>
+        {props.children}
+      </Grid>
     </Grid>
-  )
-}
+  );
+};
 
 export const FormContainer = (props) => {
+  const { title, size, formFields, submitButton, error } = props;
+
   return (
     <Grid container justifyContent="center" alignItems="center">
-      <Grid item xs={8}>
+      <Grid item xs={size || 8}>
         <Card>
-          <CardHeader title={props.title} />
+          <CardHeader title={title} />
           <CardContent>
-            {props.formFields.map((field, index) => {
-              return <Grid item key={index}>{field}</Grid>;
-            })}
+            {formFields &&
+              formFields.map((field, index) => {
+                return (
+                  <Grid item key={index}>
+                    {field}
+                  </Grid>
+                );
+              })}
             <Grid item xs={12}>
-              {props.submitButton}
+              {submitButton}
             </Grid>
-            {props.error ? <output>{props.error}</output> : <></>}
+            {error ? <output>{error}</output> : <></>}
           </CardContent>
         </Card>
       </Grid>

@@ -53,7 +53,7 @@ const BackendClient = {
     axios
       .get(`${url}/account-details`, {
         headers: {
-          "Content-Type": "application/json",
+          ...headers,
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
@@ -63,6 +63,22 @@ const BackendClient = {
       .catch((error) => {
         failureHandler(error);
       });
+  },
+
+  addIntake(intake, successHandler, failureHandler) {
+    axios
+      .post(
+        `${url}/add-intake`,
+        { ...intake },
+        {
+          headers: {
+            ...headers,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(successHandler)
+      .catch((error) => failureHandler(error));
   },
 
   verifyToken: (token, callback) => {

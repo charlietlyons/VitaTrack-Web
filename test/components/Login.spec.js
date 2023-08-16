@@ -25,26 +25,4 @@ describe("Login", () => {
     expect(emailInputElement).toBeInTheDocument();
     expect(passwordInputElement).toBeInTheDocument();
   });
-
-  it("should display Logged In component when isLoggedIn is true", async () => {
-    fillLoginForm();
-
-    const loggedInHeaderElement = await screen.findByRole("heading", {
-      name: /Logged In/i,
-    });
-
-    expect(loggedInHeaderElement).toHaveTextContent("Logged in");
-  });
 });
-
-function fillLoginForm() {
-    const emailElement = screen.getByLabelText("Email Address");
-    const passwordElement = screen.getByLabelText("Password");
-    const submitButtonElement = screen.getByRole("button", {
-      name: /Login/i,
-    });
-
-    fireEvent.change(emailElement, { target: { value: "test" } });
-    fireEvent.change(passwordElement, { target: { value: "password" } });
-    fireEvent.click(submitButtonElement);
-}

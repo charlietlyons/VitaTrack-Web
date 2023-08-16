@@ -3,8 +3,9 @@ import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
 import { Heading1 } from "./common/Headings";
 import { StyledTextField } from "./common/Inputs";
-import { FormContainer, PageContainer } from "./common/Containers";
+import { FormContainer } from "./common/Containers";
 import { AuthContext } from "../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -81,9 +82,7 @@ const Login = () => {
           error={error}
         />
       ) : (
-        <PageContainer>
-          <Heading1>Logged in</Heading1>
-        </PageContainer>
+        <Navigate to="/vitatrack/daily" />
       )}
     </>
   );
