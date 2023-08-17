@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import BackendClient from "../client/BackendClient";
 import { Heading1 } from "./common/Headings";
@@ -14,6 +14,15 @@ const Login = () => {
 
   const authContext = useContext(AuthContext);
   const { isLoggedIn, setIsLoggedIn } = authContext;
+
+  const submitHandler = useCallback(
+    (e) => {
+      e.preventDefault();
+      BackendClient.login(username, password, setIsLoggedIn, setError);
+    },
+    [username, password, setIsLoggedIn, setError]
+  );
+
 
   const usernameChangeHandler = useCallback(
     (e) => {
@@ -35,14 +44,6 @@ const Login = () => {
       }
     },
     [password, setPassword, submitHandler]
-  );
-
-  const submitHandler = useCallback(
-    (e) => {
-      e.preventDefault();
-      BackendClient.login(username, password, setIsLoggedIn, setError);
-    },
-    [username, password, setIsLoggedIn]
   );
 
   const submitOnEnterHandler = useCallback(

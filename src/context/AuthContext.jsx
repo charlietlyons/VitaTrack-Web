@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import BackendClient from '../client/BackendClient';
 
 const AuthContext = createContext();
 
@@ -12,6 +13,11 @@ const AuthProvider = ({ children }) => {
         setUser,
         setIsLoggedIn
     }
+
+    useEffect(() => {
+        BackendClient.verifyToken(localStorage.getItem("token"), setIsLoggedIn);
+    }, [setIsLoggedIn]);
+
 
     return (
         <AuthContext.Provider value={value}>

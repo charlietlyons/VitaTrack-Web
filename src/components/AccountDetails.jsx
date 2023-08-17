@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import BackendClient from "../client/BackendClient";
 import { PageContainer } from "./common/Containers";
 import { AuthContext } from "../context/AuthContext";
-import { RedirectToLogin } from "./common/Redirects"; 
+import Login from "./Login";
 
 const AccountDetails = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -21,7 +21,7 @@ const AccountDetails = () => {
       <p>Last Name: {accountDetails.last}</p>
     </PageContainer>
   ) : (
-    <RedirectToLogin />
+    <Login />
   );
 };
 

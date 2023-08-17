@@ -81,6 +81,18 @@ const BackendClient = {
       .catch((error) => failureHandler(error));
   },
 
+  getIntakes(successHandler, failureHandler) {
+    axios.get(`${url}/intake`, {
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      params: {
+        date: new Date().toJSON().slice(0, 10)
+      }
+    }).then(successHandler).catch(failureHandler);
+  },
+
   verifyToken: (token, callback) => {
     axios
       .post(
