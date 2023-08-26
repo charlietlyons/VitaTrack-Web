@@ -1,12 +1,14 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "@jest/globals";
 import "@testing-library/jest-dom";
 import Register from "../../src/components/Register";
 import { BrowserRouter } from "react-router-dom";
+import BackendClient from "../../src/client/BackendClient";
 
 describe("Register", () => {
   beforeEach(() => {
+    jest.resetAllMocks();
     render(
       <BrowserRouter>
         <Register />
@@ -39,19 +41,6 @@ describe("Register", () => {
     expect(submitButtonElement).toBeInTheDocument();
   });
 
-  it("should display error when passwords do not match", async () => {
-    fillForm({
-      first: "test",
-      last: "test",
-      email: "test",
-      phone: "test",
-      password: "test",
-      passwordConfirmation: "test2",
-    });
-    const errorElement = await screen.findByText("Passwords do not match");
-    expect(errorElement).toBeInTheDocument();
-  });
-
   it(`should display error when inputs are empty`, async () => {
     fillForm({
       first: "",
@@ -67,16 +56,124 @@ describe("Register", () => {
     expect(errorElement).toBeInTheDocument();
   });
 
+  it("should display error if passwords do not match", async () => {
+    fillForm({
+      first: "firstName",
+      last: "lastName",
+      email: "emailAddress",
+      phone: "somePhone",
+      password: "passwords",
+      passwordConfirmation: "password",
+    });
+
+    const errorElement = await screen.findByText("Passwords do not match");
+
+    expect(errorElement).toBeInTheDocument();
+  });
+
   it("should display error if trouble registering new account", async () => {
     // TODO: Fix this test
   });
 
-  it("should redirect on submission ", async () => {
-    // TODO: fix this test
+  it("should send request to register and redirect on submission ", async () => {
+    jest
+      .spyOn(BackendClient, "register")
+      .mockImplementation((body, callback) => {
+        callback();
+      });
+
+    fillForm({
+      first: "firstName",
+      last: "lastName",
+      email: "emailAddress",
+      phone: "somePhone",
+      password: "password",
+      passwordConfirmation: "password",
+    });
+
+    expect(BackendClient.register).toHaveBeenCalledWith(
+      {
+        first: "firstName",
+        last: "lastName",
+        email: "emailAddress",
+        phone: "somePhone",
+        password: "password",
+      },
+      expect.any(Function),
+      expect.any(Function)
+    );
+  });
+
+  it("should submit on enter", async () => {
+    jest
+      .spyOn(BackendClient, "register")
+      .mockImplementation((body, callback) => {
+        callback();
+      });
+
+    fillForm(
+      {
+        first: "firstName",
+        last: "lastName",
+        email: "emailAddress",
+        phone: "somePhone",
+        password: "password",
+        passwordConfirmation: "password",
+      },
+      () => {
+        const passwordInputElement = screen.getByLabelText("Password");
+        fireEvent.keyDown(passwordInputElement, { keyCode: 13 });
+      }
+    );
+
+    expect(BackendClient.register).toHaveBeenCalledWith(
+      {
+        first: "firstName",
+        last: "lastName",
+        email: "emailAddress",
+        phone: "somePhone",
+        password: "password",
+      },
+      expect.any(Function),
+      expect.any(Function)
+    );
+  });
+
+  it("should not submit on different input", async () => {
+    jest
+      .spyOn(BackendClient, "register")
+      .mockImplementation((body, callback) => {
+        callback();
+      });
+
+    fillForm(
+      {
+        first: "firstName",
+        last: "lastName",
+        email: "emailAddress",
+        phone: "somePhone",
+        password: "password",
+        passwordConfirmation: "password",
+      },
+      () => {
+        const passwordInputElement = screen.getByLabelText("Password");
+        fireEvent.keyDown(passwordInputElement, { keyCode: 17 });
+      }
+    );
+
+    expect(BackendClient.register).not.toHaveBeenCalled();
   });
 });
 
-function fillForm(formValues) {
+function fillForm(
+  formValues,
+  submitCallback = () => {
+    const submitButtonElement = screen.getByRole("button", {
+      name: /Register/i,
+    });
+    fireEvent.click(submitButtonElement);
+  }
+) {
   const firstNameInputElement = screen.getByLabelText("First Name");
   const lastNameInputElement = screen.getByLabelText("Last Name");
   const emailInputElement = screen.getByLabelText("Email Address");
@@ -84,9 +181,6 @@ function fillForm(formValues) {
   const passwordInputElement = screen.getByLabelText("Password");
   const passwordConfirmationInputElement =
     screen.getByLabelText("Confirm Password");
-  const submitButtonElement = screen.getByRole("button", {
-    name: /Register/i,
-  });
 
   fireEvent.change(firstNameInputElement, {
     target: { value: formValues.first },
@@ -110,5 +204,6 @@ function fillForm(formValues) {
       value: formValues.passwordConfirmation,
     },
   });
-  fireEvent.click(submitButtonElement);
+
+  submitCallback();
 }

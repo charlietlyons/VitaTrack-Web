@@ -85,6 +85,7 @@ const Sidebar = (props) => {
           button
           icon={<ArrowBackIosNewTwoToneIcon />}
           onClick={sidebarHandler}
+          title="sidebar-close"
         />
       </List>
     </Drawer>

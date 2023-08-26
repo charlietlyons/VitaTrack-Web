@@ -8,71 +8,57 @@ import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const authContext = useContext(AuthContext);
   const { isLoggedIn, setIsLoggedIn } = authContext;
 
-  const submitHandler = useCallback(
+  const submitHandler = useCallback(() => {
+    BackendClient.login(email, password, setIsLoggedIn, setError);
+  }, [email, password, setIsLoggedIn, setError]);
+
+  const enterToSubmitHandler = useCallback((e) => {
+    if (e.key === "Enter") {
+      submitHandler();
+    }
+  });
+
+  const emailChangeHandler = useCallback(
     (e) => {
       e.preventDefault();
-      BackendClient.login(username, password, setIsLoggedIn, setError);
+      setEmail(e.target.value);
     },
-    [username, password, setIsLoggedIn, setError]
-  );
-
-
-  const usernameChangeHandler = useCallback(
-    (e) => {
-      e.preventDefault();
-      setUsername(e.target.value);
-      if (e.keyCode === 13) {
-        submitHandler();
-      }
-    },
-    [username, setUsername, submitHandler]
+    [email, setEmail]
   );
 
   const passwordChangeHandler = useCallback(
     (e) => {
       e.preventDefault();
       setPassword(e.target.value);
-      if (e.keyCode === 13) {
-        submitHandler();
-      }
     },
-    [password, setPassword, submitHandler]
-  );
-
-  const submitOnEnterHandler = useCallback(
-    (e) => {
-      if (e.keyCode === 13) {
-        submitHandler(e);
-      }
-    },
-    [submitHandler]
+    [password, setPassword]
   );
 
   return (
     <>
       {!isLoggedIn ? (
         <FormContainer
-          title={!isLoggedIn ? <Heading1>Login</Heading1> : <></>}
+          title={!isLoggedIn && <Heading1>Login</Heading1>}
           formFields={[
             <StyledTextField
               id="email"
               label="Email Address"
-              onChange={usernameChangeHandler}
-              onKeyDown={submitOnEnterHandler}
+              onKeyDown={enterToSubmitHandler}
+              onChange={emailChangeHandler}
             ></StyledTextField>,
             <StyledTextField
               id="password"
               label="Password"
               type="password"
+              onKeyDown={enterToSubmitHandler}
               onChange={passwordChangeHandler}
-              onKeyDown={submitOnEnterHandler}
             ></StyledTextField>,
           ]}
           submitButton={
