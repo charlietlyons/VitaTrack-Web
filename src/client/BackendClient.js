@@ -23,14 +23,19 @@ const BackendClient = {
               loginSuccessHandler(true);
               errorHandler("");
             }
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            errorHandler("Invalid Credentials");
           } else {
             errorHandler(
-              "There was an error reaching the server. Please try again later."
+              "There was an issue verifying your account. Please try again later."
             );
           }
         });
     } catch (error) {
-      errorHandler("Invalid credentials");
+      errorHandler(error.message);
     }
   },
 

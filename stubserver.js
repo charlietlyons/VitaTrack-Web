@@ -56,10 +56,26 @@ function handleAccountDetails(req, res) {
   }
 }
 
+function handleGetIntakes(req, res) {
+  const intakeRecords = router.db.get("intakes");
+
+  if (intakeRecords) {
+    res.json(intakeRecords);
+  } else {
+    res.status(401).json({ error: "No intakes, sorry" });
+  }
+}
+
+function handleAddIntake(req, res) {
+  res.status(200).send();
+}
+
 server.get("/account-details", handleAccountDetails);
 server.post("/register-user", handleRegistration);
 server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
+server.get("/intake", handleGetIntakes);
+server.post("/add-intake", handleAddIntake);
 
 server.use(router);
 

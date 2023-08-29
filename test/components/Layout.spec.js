@@ -39,7 +39,7 @@ describe("Layout", () => {
     const floatingButton = await screen.findByTitle("sidebar-button");
     fireEvent.click(floatingButton);
 
-    const closeButtonElement = await screen.findByTitle("sidebar-close");
+    const closeButtonElement = await screen.findByTestId("sidebar-close");
     fireEvent.click(closeButtonElement);
 
     const loginButton = screen.queryByRole("button", { name: /Login/i });
