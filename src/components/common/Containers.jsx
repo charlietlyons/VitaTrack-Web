@@ -1,4 +1,12 @@
-import { Paper, Grid, Card, CardContent, CardHeader } from "@mui/material";
+import {
+  Paper,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogTitle,
+} from "@mui/material";
 import styled from "styled-components";
 import React from "react";
 
@@ -22,7 +30,7 @@ export const PageContainer = (props) => {
 };
 
 export const FormContainer = (props) => {
-  const { title, size, formFields, submitButton, error } = props;
+  const { title, size, formFields, buttons, error } = props;
 
   return (
     <Grid container justifyContent="center" alignItems="center">
@@ -38,13 +46,30 @@ export const FormContainer = (props) => {
                   </Grid>
                 );
               })}
-            <Grid item xs={12}>
-              {submitButton}
-            </Grid>
+
+            {buttons.map((button) => {
+              return (
+                <Grid item xs={12}>
+                  {button}
+                </Grid>
+              );
+            })}
+
             {error ? <output>{error}</output> : <></>}
           </CardContent>
         </Card>
       </Grid>
     </Grid>
+  );
+};
+
+export const DialogContainer = (props) => {
+  const { title, showDialog, children } = props;
+
+  return (
+    <Dialog open={showDialog}>
+      <DialogTitle>{title}</DialogTitle>
+      {children}
+    </Dialog>
   );
 };

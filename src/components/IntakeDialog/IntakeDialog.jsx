@@ -1,16 +1,18 @@
 import React, { useState, useCallback } from "react";
-import { Dialog, DialogTitle, Button, Autocomplete } from "@mui/material";
+import { Button, Autocomplete } from "@mui/material";
 import { StyledTextField } from "../common/Inputs";
-import { FormContainer } from "../common/Containers";
+import { DialogContainer, FormContainer } from "../common/Containers";
 import BackendClient from "../../client/BackendClient";
+import FoodDialog from "../FoodDialog/FoodDialog";
 
 const IntakeDialog = (props) => {
-    const { showForm, setShowForm } = props;
-    const [food, setFood] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [error, setError] = useState("");  
+  const { showDialog, setShowDialog } = props;
+  const [showAddFoodDialog, setShowAddFoodDialog] = useState(false);
+  const [food, setFood] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [error, setError] = useState("");
 
-    const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(() => {
     // TODO: form validation
     BackendClient.addIntake(
       {
@@ -18,15 +20,15 @@ const IntakeDialog = (props) => {
         quantity: quantity,
       },
       () => {
-        setShowForm(false);
+        setShowDialog(false);
       },
       (error) => {
         setError("Something went wrong: ", error);
       }
     );
-  }, [setShowForm, setError, food, quantity]);
+  }, [setShowDialog, setError, food, quantity]);
 
-    const foodChangeHandler = useCallback(
+  const foodChangeHandler = useCallback(
     (event, newValue) => {
       setFood(newValue);
     },
@@ -40,39 +42,57 @@ const IntakeDialog = (props) => {
     [setQuantity]
   );
 
-    return (
-        <Dialog open={showForm}>
-            <DialogTitle>Add Intake</DialogTitle>
-            <FormContainer
-              size={12}
-              error={error}
-              formFields={[
-                <Autocomplete
-                  id="food"
-                  options={["Banana", "Apple", "Orange"]}
-                  value={food}
-                  sx={{ width: 300 }}
-                  onChange={foodChangeHandler}
-                  renderInput={(params) => (
-                    <StyledTextField {...params} label="Food" />
-                  )}
-                ></Autocomplete>,
-                <StyledTextField
-                  id="quantity"
-                  label="Quantity"
-                  value={quantity}
-                  type="number"
-                  onChange={quantityChangeHandler}
-                  onKeyDown={(e) => e.keyCode === 13 && submitHandler()}
-                ></StyledTextField>,
-              ]}
-              submitButton={
-                <Button variant="contained" onClick={submitHandler}>
-                  Submit
-                </Button>
-              }/>
-        </Dialog>
-    );
-}
+  return (
+    <DialogContainer title="Add Intake" showDialog={showDialog}>
+      <FormContainer
+        size={12}
+        error={error}
+        formFields={[
+          <Autocomplete
+            id="food"
+            options={["Banana", "Apple", "Orange"]}
+            value={food}
+            sx={{ width: 300 }}
+            onChange={foodChangeHandler}
+            renderInput={(params) => (
+              <StyledTextField {...params} label="Food" />
+            )}
+          ></Autocomplete>,
+          <StyledTextField
+            id="quantity"
+            label="Quantity"
+            value={quantity}
+            type="number"
+            onChange={quantityChangeHandler}
+            onKeyDown={(e) => e.keyCode === 13 && submitHandler()}
+          ></StyledTextField>,
+        ]}
+        buttons={[
+          <Button variant="contained" onClick={submitHandler} fullWidth>
+            Submit
+          </Button>,
+          <Button
+            variant="outlined"
+            onClick={() => setShowAddFoodDialog(true)}
+            fullWidth
+          >
+            Add Food
+          </Button>,
+          <Button
+            variant="outlined"
+            onClick={() => setShowDialog(false)}
+            fullWidth
+          >
+            Cancel
+          </Button>,
+        ]}
+      />
+      <FoodDialog
+        showDialog={showAddFoodDialog}
+        setShowDialog={setShowAddFoodDialog}
+      ></FoodDialog>
+    </DialogContainer>
+  );
+};
 
 export default IntakeDialog;

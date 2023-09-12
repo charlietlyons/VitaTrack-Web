@@ -61,11 +61,11 @@ const Login = () => {
               onChange={passwordChangeHandler}
             ></StyledTextField>,
           ]}
-          submitButton={
+          buttons={[
             <Button variant="contained" onClick={submitHandler}>
               Login
-            </Button>
-          }
+            </Button>,
+          ]}
           error={error}
         />
       ) : (

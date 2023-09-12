@@ -59,7 +59,11 @@ const Register = () => {
           password: formData.password,
           phone: formData.phone,
         };
-        BackendClient.register(body, () => navigate("/vitatrack/login"), setError);
+        BackendClient.register(
+          body,
+          () => navigate("/vitatrack/login"),
+          setError
+        );
       }
     },
     [formData]
@@ -123,11 +127,11 @@ const Register = () => {
           onKeyDown={submitOnEnterHandler}
         ></StyledTextField>,
       ]}
-      submitButton={
+      buttons={[
         <Button variant="contained" onClick={submitHandler}>
           Register
-        </Button>
-      }
+        </Button>,
+      ]}
       error={error}
     />
   );
