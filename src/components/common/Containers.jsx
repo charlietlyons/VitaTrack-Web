@@ -47,9 +47,9 @@ export const FormContainer = (props) => {
                 );
               })}
 
-            {buttons.map((button) => {
+            {buttons.map((button, index) => {
               return (
-                <Grid item xs={12}>
+                <Grid item key={index} xs={12}>
                   {button}
                 </Grid>
               );
@@ -64,10 +64,17 @@ export const FormContainer = (props) => {
 };
 
 export const DialogContainer = (props) => {
-  const { title, showDialog, children } = props;
+  const { title, size, showDialog, children } = props;
 
   return (
-    <Dialog open={showDialog}>
+    <Dialog
+      open={showDialog}
+      maxWidth={ size || "sm"}
+      fullWidth
+      sx={{
+        backgroundColor: "rgb(130, 255, 141, .5)",
+      }}
+    >
       <DialogTitle>{title}</DialogTitle>
       {children}
     </Dialog>

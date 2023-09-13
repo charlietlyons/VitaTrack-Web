@@ -43,7 +43,7 @@ const IntakeDialog = (props) => {
   );
 
   return (
-    <DialogContainer title="Add Intake" showDialog={showDialog}>
+    <DialogContainer title="Add Intake" showDialog={showDialog} size="md">
       <FormContainer
         size={12}
         error={error}

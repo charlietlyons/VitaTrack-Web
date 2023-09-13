@@ -57,9 +57,30 @@ describe("BackendClient", () => {
       );
 
       expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
-      expect(mockFailureHandler).toHaveBeenCalledWith(
-        "There was an error reaching the server. Please try again later."
+      expect(mockFailureHandler).toHaveBeenCalledWith("Invalid Credentials");
+    });
+
+    it("should display trouble verifying if axios errors", () => {
+      const mockSuccessHandler = jest.fn();
+      const mockErrorHandler = jest.fn();
+
+      axios.post.mockRejectedValue(new Error("error time"));
+
+      BackendClient.login(
+        "username",
+        "password",
+        mockSuccessHandler,
+        mockErrorHandler
       );
+
+      setTimeout(() => {
+        expect(mockErrorHandler).toHaveBeenCalledWith(
+          "There was an issue verifying your account. Please try again later."
+        );
+        expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
+
+        done(); // Call done() to signal that the test is complete
+      }, 1000);
     });
 
     it("should return error if call errors", async () => {
@@ -77,7 +98,7 @@ describe("BackendClient", () => {
         mockErrorHandler
       );
 
-      expect(mockErrorHandler).toHaveBeenCalledWith("Invalid credentials");
+      expect(mockErrorHandler).toHaveBeenCalledWith("error");
       expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
     });
   });
@@ -235,6 +256,63 @@ describe("BackendClient", () => {
 
       expect(mockSuccessHandler).not.toHaveBeenCalled();
       expect(mockFailureHandler).toHaveBeenCalled();
+    });
+  });
+
+  describe("addFood", () => {
+    it("should call successHandler if response exists", () => {
+      const mockSuccessHandler = jest.fn();
+      const mockFailureHandler = jest.fn();
+      const response = { status: 200 };
+
+      axios.post.mockResolvedValue(response);
+
+      BackendClient.addFood(
+        { food: "someFood" },
+        mockSuccessHandler,
+        mockFailureHandler
+      );
+
+      setTimeout(() => {
+        expect(mockSuccessHandler).toHaveBeenCalled();
+        expect(mockFailureHandler).not.toHaveBeenCalled();
+      }, 1000);
+    });
+
+    it("should call failHandler when axios errors", () => {
+      const mockSuccessHandler = jest.fn();
+      const mockFailureHandler = jest.fn();
+      axios.post.mockRejectedValue(new Error("error"));
+
+      BackendClient.addFood(
+        { food: "someFood" },
+        mockSuccessHandler,
+        mockFailureHandler
+      );
+
+      setTimeout(() => {
+        expect(mockSuccessHandler).not.toHaveBeenCalled();
+        expect(mockFailureHandler).toHaveBeenCalled();
+      }, 1000);
+    });
+
+    it("should call failHandler when a general error occurs", () => {
+      const mockSuccessHandler = jest.fn();
+      const mockFailureHandler = jest.fn();
+      axios.post.mockImplementation(() => {
+        throw new Error("error");
+      });
+
+      BackendClient.addFood(
+        { food: "someFood" },
+        mockSuccessHandler,
+        mockFailureHandler
+      );
+
+      setTimeout(() => {
+        expect(mockSuccessHandler).not.toHaveBeenCalled();
+        expect(mockFailureHandler).toHaveBeenCalled();
+      }, 1000);
     });
   });
 

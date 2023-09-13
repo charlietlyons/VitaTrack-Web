@@ -17,22 +17,18 @@ const BackendClient = {
           }
         )
         .then((response) => {
-          if (response.status === 200) {
-            if (response.data && response.data.token) {
-              localStorage.setItem("token", response.data.token);
-              loginSuccessHandler(true);
-              errorHandler("");
-            }
+          if (response.status === 200 && response.data && response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            loginSuccessHandler(true);
+            errorHandler("");
+          } else if (response.status === 401) {
+            errorHandler("Invalid Credentials");
           }
         })
-        .catch((err) => {
-          if (err.response.status === 401) {
-            errorHandler("Invalid Credentials");
-          } else {
-            errorHandler(
-              "There was an issue verifying your account. Please try again later."
-            );
-          }
+        .catch(() => {
+          errorHandler(
+            "There was an issue verifying your account. Please try again later."
+          );
         });
     } catch (error) {
       errorHandler(error.message);
@@ -108,6 +104,26 @@ const BackendClient = {
         .then(successHandler);
     } catch (error) {
       failureHandler();
+    }
+  },
+
+  addFood(body, successHandler, failureHandler) {
+    try {
+      axios
+        .post(
+          `${url}/add-food`,
+          { ...body },
+          {
+            headers: {
+              ...headers,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then(successHandler)
+        .catch(failureHandler);
+    } catch (error) {
+      failureHandler(error);
     }
   },
 
