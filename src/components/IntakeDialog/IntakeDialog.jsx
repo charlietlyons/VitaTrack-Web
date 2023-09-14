@@ -4,6 +4,7 @@ import { StyledTextField } from "../common/Inputs";
 import { DialogContainer, FormContainer } from "../common/Containers";
 import BackendClient from "../../client/BackendClient";
 import FoodDialog from "../FoodDialog/FoodDialog";
+import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 
 const IntakeDialog = (props) => {
   const { showDialog, setShowDialog } = props;
@@ -28,6 +29,8 @@ const IntakeDialog = (props) => {
     );
   }, [setShowDialog, setError, food, quantity]);
 
+  const submitOnEnter = useEnterButtonSubmit(submitHandler);
+
   const foodChangeHandler = useCallback(
     (event, newValue) => {
       setFood(newValue);
@@ -50,10 +53,11 @@ const IntakeDialog = (props) => {
         formFields={[
           <Autocomplete
             id="food"
-            options={["Banana", "Apple", "Orange"]}
+            options={["", "Banana", "Apple", "Orange"]}
             value={food}
             sx={{ width: 300 }}
             onChange={foodChangeHandler}
+            onKeyDown={submitOnEnter}
             renderInput={(params) => (
               <StyledTextField {...params} label="Food" />
             )}
@@ -64,7 +68,7 @@ const IntakeDialog = (props) => {
             value={quantity}
             type="number"
             onChange={quantityChangeHandler}
-            onKeyDown={(e) => e.keyCode === 13 && submitHandler()}
+            onKeyDown={submitOnEnter}
           ></StyledTextField>,
         ]}
         buttons={[
