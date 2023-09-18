@@ -18,6 +18,7 @@ import {
 } from "../common/constants";
 import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 import BackendClient from "../../client/BackendClient";
+import AddFoodValidator from "../../validators/AddFoodValidator";
 
 const FoodDialog = (props) => {
   const [state, dispatch] = useReducer(FoodDialogReducer, {
@@ -35,7 +36,7 @@ const FoodDialog = (props) => {
   const { showDialog, setShowDialog } = props;
   const [error, setError] = useState("");
   const submitHandler = useCallback(() => {
-    if (checkForEmpties(state, setError)) {
+    if (AddFoodValidator.validate(state, setError)) {
       setError("");
       BackendClient.addFood(
         state,
@@ -153,41 +154,5 @@ const FoodDialog = (props) => {
     </DialogContainer>
   );
 };
-
-function checkForEmpties(state, setError) {
-  // TODO: extract to a hook that can be reused
-  if (state.name === "") {
-    setError("Name is required");
-    return false;
-  } else if (state.servingSize === "") {
-    setError("Serving Size is required");
-    return false;
-  } else if (state.servingMetric === "") {
-    setError("Serving Metric is required");
-    return false;
-  } else if (state.calories === "") {
-    setError("Calories is required");
-    return false;
-  } else if (state.protein === "") {
-    setError("Protein is required");
-    return false;
-  } else if (state.carbs === "") {
-    setError("Carbs is required");
-    return false;
-  } else if (state.fat === "") {
-    setError("Fat is required");
-    return false;
-  } else if (state.access === "") {
-    setError("Access is required");
-    return false;
-  } else if (state.description === "") {
-    setError("Description is required");
-    return false;
-  } else if (state.imageUrl === "") {
-    setError("Image URL is required");
-    return false;
-  }
-  return true;
-}
 
 export default FoodDialog;

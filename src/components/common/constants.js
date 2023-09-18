@@ -7,13 +7,13 @@ export const SET_CONFIRM_PASSWORD = "password-confirmation";
 export const SET_PHONE = "phone";
 
 // Food Dialog Form Reducer Constants
-export const FOOD_NAME = "setfoodname"
-export const SERVING_SIZE = "setservingsize"
-export const SERVING_METRIC = "setservingmetric"
-export const CALORIES = "setcalories"
-export const PROTEIN = "setprotein"
-export const CARBS = "setcarbs"
-export const FAT = "setfat"
-export const ACCESS = "setaccess"
-export const DESCRIPTION = "setdescription"
-export const IMAGE_URL = "setimageurl"
+export const FOOD_NAME = "foodname"
+export const SERVING_SIZE = "servingsize"
+export const SERVING_METRIC = "servingmetric"
+export const CALORIES = "calories"
+export const PROTEIN = "protein"
+export const CARBS = "carbs"
+export const FAT = "fat"
+export const ACCESS = "access"
+export const DESCRIPTION = "description"
+export const IMAGE_URL = "imageurl"

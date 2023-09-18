@@ -5,6 +5,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
+// TODO: convert to class and use async/await instead
 const BackendClient = {
   login: (email, password, loginSuccessHandler, errorHandler) => {
     try {
@@ -101,9 +102,14 @@ const BackendClient = {
             date: new Date().toJSON().slice(0, 10),
           },
         })
-        .then(successHandler);
+        .then((response) => {
+          successHandler(response.data);
+        })
+        .catch(() => {
+          failureHandler("Something went wrong.");
+        });
     } catch (error) {
-      failureHandler();
+      failureHandler("Something went wrong.");
     }
   },
 

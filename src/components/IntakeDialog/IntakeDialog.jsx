@@ -35,7 +35,7 @@ const IntakeDialog = (props) => {
     (event, newValue) => {
       setFood(newValue);
     },
-    [food, setFood]
+    [setFood]
   );
 
   const quantityChangeHandler = useCallback(
@@ -47,14 +47,15 @@ const IntakeDialog = (props) => {
 
   return (
     <DialogContainer title="Add Intake" showDialog={showDialog} size="md">
+      {food}
       <FormContainer
         size={12}
         error={error}
         formFields={[
           <Autocomplete
             id="food"
-            options={["", "Banana", "Apple", "Orange"]}
-            value={food}
+            data-testid="food-input"
+            options={["Banana", "Apple", "Orange"]}
             sx={{ width: 300 }}
             onChange={foodChangeHandler}
             onKeyDown={submitOnEnter}
@@ -66,6 +67,7 @@ const IntakeDialog = (props) => {
             id="quantity"
             label="Quantity"
             value={quantity}
+            data-testid="quantity-input"
             type="number"
             onChange={quantityChangeHandler}
             onKeyDown={submitOnEnter}

@@ -32,7 +32,7 @@ const FoodDialogReducer = (prev, action) => {
       return {
         ...prev,
         calories: action.payload,
-      };
+      };  
     case PROTEIN:
       return {
         ...prev,

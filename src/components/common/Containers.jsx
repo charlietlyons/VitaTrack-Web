@@ -55,7 +55,7 @@ export const FormContainer = (props) => {
               );
             })}
 
-            {error ? <output>{error}</output> : <></>}
+            {error && <output data-testid="form-error">{error}</output>}
           </CardContent>
         </Card>
       </Grid>
