@@ -57,9 +57,29 @@ describe("BackendClient", () => {
       );
 
       expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
-      expect(mockFailureHandler).toHaveBeenCalledWith(
-        "There was an error reaching the server. Please try again later."
+      expect(mockFailureHandler).toHaveBeenCalledWith("Invalid Credentials");
+    });
+
+    it("should display issue verifying if axios errors", async () => {
+      const mockSuccessHandler = jest.fn();
+      const mockErrorHandler = jest.fn();
+
+      axios.post.mockImplementation(() => {
+        return Promise.reject(new Error("error time"));
+      });
+      BackendClient.login(
+        "username",
+        "password",
+        mockSuccessHandler,
+        mockErrorHandler
       );
+
+      await new Promise((res) => setTimeout(res, 10));
+
+      expect(mockErrorHandler).toHaveBeenCalledWith(
+        "There was an issue verifying your account. Please try again later."
+      );
+      expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
     });
 
     it("should return error if call errors", async () => {
@@ -77,7 +97,9 @@ describe("BackendClient", () => {
         mockErrorHandler
       );
 
-      expect(mockErrorHandler).toHaveBeenCalledWith("Invalid credentials");
+      await new Promise((res) => setTimeout(res, 10));
+
+      expect(mockErrorHandler).toHaveBeenCalledWith("error");
       expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
     });
   });
@@ -222,6 +244,22 @@ describe("BackendClient", () => {
       expect(mockFailureHandler).not.toHaveBeenCalled();
     });
 
+    it("should call failureHandler when axios request fails", async () => {
+      const successHandler = jest.fn();
+      const failureHandler = jest.fn();
+
+      axios.get.mockImplementation(() => {
+        return Promise.reject(new Error("Network Error"));
+      });
+
+      await BackendClient.getIntakes(successHandler, failureHandler);
+
+      await new Promise((res) => setTimeout(res, 10));
+
+      expect(failureHandler).toHaveBeenCalledWith("Something went wrong.");
+      expect(successHandler).not.toHaveBeenCalled();
+    });
+
     it("should call errorHandler if error", async () => {
       const mockSuccessHandler = jest.fn();
       const mockFailureHandler = jest.fn();
@@ -232,6 +270,59 @@ describe("BackendClient", () => {
       });
 
       await BackendClient.getIntakes(mockSuccessHandler, mockFailureHandler);
+
+      expect(mockSuccessHandler).not.toHaveBeenCalled();
+      expect(mockFailureHandler).toHaveBeenCalled();
+    });
+  });
+
+  describe("addFood", () => {
+    it("should call successHandler if response exists", async () => {
+      const mockSuccessHandler = jest.fn();
+      const mockFailureHandler = jest.fn();
+      const response = { status: 200 };
+
+      axios.post.mockResolvedValue(response);
+
+      await BackendClient.addFood(
+        { food: "someFood" },
+        mockSuccessHandler,
+        mockFailureHandler
+      );
+
+      expect(mockSuccessHandler).toHaveBeenCalled();
+      expect(mockFailureHandler).not.toHaveBeenCalled();
+    });
+
+    it("should call failHandler when axios errors", async () => {
+      const mockSuccessHandler = jest.fn();
+      const mockFailureHandler = jest.fn();
+      axios.post.mockRejectedValue(new Error("error"));
+
+      await BackendClient.addFood(
+        { food: "someFood" },
+        mockSuccessHandler,
+        mockFailureHandler
+      );
+
+      await new Promise((res) => setTimeout(res, 10));
+
+      expect(mockSuccessHandler).not.toHaveBeenCalled();
+      expect(mockFailureHandler).toHaveBeenCalled();
+    });
+
+    it("should call failHandler when a general error occurs", async () => {
+      const mockSuccessHandler = jest.fn();
+      const mockFailureHandler = jest.fn();
+      axios.post.mockImplementation(() => {
+        throw new Error("error");
+      });
+
+      await BackendClient.addFood(
+        { food: "someFood" },
+        mockSuccessHandler,
+        mockFailureHandler
+      );
 
       expect(mockSuccessHandler).not.toHaveBeenCalled();
       expect(mockFailureHandler).toHaveBeenCalled();

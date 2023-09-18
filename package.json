@@ -12,7 +12,7 @@
     "test": "concurrently \"npm run stub-server\" \"jest --env=jsdom\"",
     "test:coverage": "concurrently \"npm run stub-server\" \"jest --env=jsdom --coverage\"",
     "test:watch": "concurrently \"npm run stub-server\" \"jest --watchAll --env=jsdom\""
-    },
+  },
   "author": "Charlotte Lyons",
   "license": "ISC",
   "dependencies": {
@@ -35,6 +35,7 @@
     "@babel/preset-react": "^7.22.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/react-hooks": "^8.0.1",
     "@webpack-cli/serve": "^2.0.5",
     "babel-loader": "^9.1.2",
     "concurrently": "^8.2.0",
@@ -53,6 +54,13 @@
     "testEnvironment": "jsdom",
     "testMatch": [
       "**/*.spec.js"
+    ],
+    "collectCoverageFrom": [
+      "./src/**"
+    ],
+    "coveragePathIgnorePatterns": [
+      "./src/index.js",
+      "./src/App.jsx"
     ]
   }
 }

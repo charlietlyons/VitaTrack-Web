@@ -5,6 +5,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
+// TODO: convert to class and use async/await instead
 const BackendClient = {
   login: (email, password, loginSuccessHandler, errorHandler) => {
     try {
@@ -17,20 +18,21 @@ const BackendClient = {
           }
         )
         .then((response) => {
-          if (response.status === 200) {
-            if (response.data && response.data.token) {
-              localStorage.setItem("token", response.data.token);
-              loginSuccessHandler(true);
-              errorHandler("");
-            }
-          } else {
-            errorHandler(
-              "There was an error reaching the server. Please try again later."
-            );
+          if (response.status === 200 && response.data && response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            loginSuccessHandler(true);
+            errorHandler("");
+          } else if (response.status === 401) {
+            errorHandler("Invalid Credentials");
           }
+        })
+        .catch(() => {
+          errorHandler(
+            "There was an issue verifying your account. Please try again later."
+          );
         });
     } catch (error) {
-      errorHandler("Invalid credentials");
+      errorHandler(error.message);
     }
   },
 
@@ -100,9 +102,34 @@ const BackendClient = {
             date: new Date().toJSON().slice(0, 10),
           },
         })
-        .then(successHandler);
+        .then((response) => {
+          successHandler(response.data);
+        })
+        .catch(() => {
+          failureHandler("Something went wrong.");
+        });
     } catch (error) {
-      failureHandler();
+      failureHandler("Something went wrong.");
+    }
+  },
+
+  addFood(body, successHandler, failureHandler) {
+    try {
+      axios
+        .post(
+          `${url}/add-food`,
+          { ...body },
+          {
+            headers: {
+              ...headers,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then(successHandler)
+        .catch(failureHandler);
+    } catch (error) {
+      failureHandler(error);
     }
   },
 

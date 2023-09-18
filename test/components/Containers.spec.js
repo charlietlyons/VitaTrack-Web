@@ -10,4 +10,6 @@ describe("Containers", () => {
 
     expect(screen.getByTitle("big-boy")).toBeInTheDocument();
   });
+
+  it("should render child elements", () => {});
 });
