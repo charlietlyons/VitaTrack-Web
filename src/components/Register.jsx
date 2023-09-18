@@ -8,12 +8,12 @@ import RegisterFormReducer from "../reducers/RegisterFormReducer";
 import BackendClient from "../client/BackendClient";
 
 import {
-  SET_FIRST,
-  SET_LAST,
-  SET_EMAIL,
-  SET_PASSWORD,
-  SET_CONFIRM_PASSWORD,
-  SET_PHONE,
+  FIRST,
+  LAST,
+  EMAIL,
+  PASSWORD,
+  CONFIRM_PASSWORD,
+  PHONE,
 } from "../components/common/constants";
 
 const Register = () => {
@@ -83,21 +83,21 @@ const Register = () => {
       title={<Heading1>Register</Heading1>}
       formFields={[
         <StyledTextField
-          id={SET_FIRST}
+          id={FIRST}
           label="First Name"
           value={formData.first}
           onChange={(event) => formChangeHandler(event)}
           onKeyDown={submitOnEnterHandler}
         ></StyledTextField>,
         <StyledTextField
-          id={SET_LAST}
+          id={LAST}
           label="Last Name"
           value={formData.last}
           onChange={(event) => formChangeHandler(event)}
           onKeyDown={submitOnEnterHandler}
         ></StyledTextField>,
         <StyledTextField
-          id={SET_PASSWORD}
+          id={PASSWORD}
           value={formData.password}
           label="Password"
           type="password"
@@ -105,7 +105,7 @@ const Register = () => {
           onKeyDown={submitOnEnterHandler}
         ></StyledTextField>,
         <StyledTextField
-          id={SET_CONFIRM_PASSWORD}
+          id={CONFIRM_PASSWORD}
           value={formData.passwordConfirmation}
           label="Confirm Password"
           type="password"
@@ -113,14 +113,14 @@ const Register = () => {
           onKeyDown={submitOnEnterHandler}
         ></StyledTextField>,
         <StyledTextField
-          id={SET_PHONE}
+          id={PHONE}
           label="Phone"
           pattern="^\+?(\d{1,3})?[-. (]?\d{3}[-. )]?\d{3}[-. ]?\d{4}$"
           onChange={(event) => formChangeHandler(event)}
           onKeyDown={submitOnEnterHandler}
         ></StyledTextField>,
         <StyledTextField
-          id={SET_EMAIL}
+          id={EMAIL}
           label="Email Address"
           pattern="^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,3}$"
           onChange={(event) => formChangeHandler(event)}

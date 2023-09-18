@@ -1,25 +1,25 @@
 import {
-  SET_EMAIL,
-  SET_PASSWORD,
-  SET_CONFIRM_PASSWORD,
-  SET_PHONE,
-  SET_FIRST,
-  SET_LAST,
+  EMAIL,
+  PASSWORD,
+  CONFIRM_PASSWORD,
+  PHONE,
+  FIRST,
+  LAST,
 } from "../components/common/constants";
 
 const RegisterFormReducer = (state, action) => {
   switch (action.type) {
-    case SET_FIRST:
+    case FIRST:
       return { ...state, first: action.payload };
-    case SET_LAST:
+    case LAST:
       return { ...state, last: action.payload };
-    case SET_EMAIL:
+    case EMAIL:
       return { ...state, email: action.payload };
-    case SET_PASSWORD:
+    case PASSWORD:
       return { ...state, password: action.payload };
-    case SET_CONFIRM_PASSWORD:
+    case CONFIRM_PASSWORD:
       return { ...state, passwordConfirmation: action.payload };
-    case SET_PHONE:
+    case PHONE:
       return { ...state, phone: action.payload };
     default:
       return state;

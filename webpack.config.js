@@ -44,5 +44,3 @@ module.exports = {
     }),
   ],
 };
-
-// precommit hook test
