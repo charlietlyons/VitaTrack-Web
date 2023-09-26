@@ -1,31 +1,27 @@
+import { setErrorAndReturnFalse } from "../components/common/util/setErrorAndReturn";
+
 const AddFoodValidator = {
   validate: (state, setError) => {
-    function setErrorAndReturnFalse(error) {
-      setError(error);
-      return false;
-    }
-
-    // TODO: extract to a hook that can be reused
     if (state.name === "") {
-      return setErrorAndReturnFalse("Name is required");
+      return setErrorAndReturnFalse("Name is required", setError);
     } else if (state.servingSize === "") {
-      return setErrorAndReturnFalse("Serving Size is required");
+      return setErrorAndReturnFalse("Serving Size is required", setError);
     } else if (state.servingMetric === "") {
-      return setErrorAndReturnFalse("Serving Metric is required");
+      return setErrorAndReturnFalse("Serving Metric is required", setError);
     } else if (state.calories === "") {
-      return setErrorAndReturnFalse("Calories is required");
+      return setErrorAndReturnFalse("Calories is required", setError);
     } else if (state.protein === "") {
-      return setErrorAndReturnFalse("Protein is required");
+      return setErrorAndReturnFalse("Protein is required", setError);
     } else if (state.carbs === "") {
-      return setErrorAndReturnFalse("Carbs is required");
+      return setErrorAndReturnFalse("Carbs is required", setError);
     } else if (state.fat === "") {
-      return setErrorAndReturnFalse("Fat is required");
+      return setErrorAndReturnFalse("Fat is required", setError);
     } else if (state.access === "") {
-      return setErrorAndReturnFalse("Access is required");
+      return setErrorAndReturnFalse("Access is required", setError);
     } else if (state.description === "") {
-      return setErrorAndReturnFalse("Description is required");
+      return setErrorAndReturnFalse("Description is required", setError);
     } else if (state.imageUrl === "") {
-      return setErrorAndReturnFalse("Image URL is required");
+      return setErrorAndReturnFalse("Image URL is required", setError);
     }
     return true;
   },

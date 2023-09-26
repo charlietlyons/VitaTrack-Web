@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Button, Autocomplete } from "@mui/material";
 import { StyledTextField } from "../common/Inputs";
 import { DialogContainer, FormContainer } from "../common/Containers";
 import BackendClient from "../../client/BackendClient";
 import FoodDialog from "../FoodDialog/FoodDialog";
 import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
+import AddIntakeValidator from "../../validators/AddIntakeValidator";
 
 const IntakeDialog = (props) => {
   const { showDialog, setShowDialog } = props;
@@ -12,28 +13,51 @@ const IntakeDialog = (props) => {
   const [food, setFood] = useState("");
   const [quantity, setQuantity] = useState("");
   const [error, setError] = useState("");
+  const [foodOptions, setFoodOptions] = useState([]);
+
+  useEffect(() => {
+    async function getData() {
+      const foodOptionsData = await BackendClient.getFoodOptions();
+      const foodNames = await foodOptionsData.map((option) => ({
+        label: option.name,
+        id: option._id,
+      }));
+      setFoodOptions(foodNames);
+    }
+
+    getData();
+  }, [setFoodOptions]);
 
   const submitHandler = useCallback(() => {
-    // TODO: form validation
-    BackendClient.addIntake(
-      {
-        foodId: food,
-        quantity: quantity,
-      },
-      () => {
-        setShowDialog(false);
-      },
-      (error) => {
-        setError("Something went wrong: ", error);
-      }
-    );
+    const formData = {
+      foodId: food,
+      quantity: quantity,
+    };
+
+    if (AddIntakeValidator.validate(formData, setError))
+      // TODO: form validation
+      BackendClient.addIntake(
+        formData,
+        () => {
+          setFood("");
+          setQuantity("");
+          setShowDialog(false);
+        },
+        (error) => {
+          setError("Something went wrong: ", error);
+        }
+      );
   }, [setShowDialog, setError, food, quantity]);
 
   const submitOnEnter = useEnterButtonSubmit(submitHandler);
 
   const foodChangeHandler = useCallback(
     (event, newValue) => {
-      setFood(newValue);
+      if (newValue) {
+        setFood(newValue.id);
+      } else {
+        setFood("");
+      }
     },
     [setFood]
   );
@@ -47,7 +71,6 @@ const IntakeDialog = (props) => {
 
   return (
     <DialogContainer title="Add Intake" showDialog={showDialog} size="md">
-      {food}
       <FormContainer
         size={12}
         error={error}
@@ -55,7 +78,8 @@ const IntakeDialog = (props) => {
           <Autocomplete
             id="food"
             data-testid="food-input"
-            options={["Banana", "Apple", "Orange"]}
+            options={foodOptions}
+            getOptionLabel={(option) => option.label}
             sx={{ width: 300 }}
             onChange={foodChangeHandler}
             onKeyDown={submitOnEnter}

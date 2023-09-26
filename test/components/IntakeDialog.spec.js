@@ -1,5 +1,6 @@
 import { render, within } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
+import { act } from "react-dom/test-utils";
 import IntakeDialog from "../../src/components/IntakeDialog/IntakeDialog";
 import React from "react";
 import { fireEvent, waitFor } from "@testing-library/dom";
@@ -9,10 +10,26 @@ import "@testing-library/jest-dom";
 describe("IntakeDialog", () => {
   let setShowDialogMock;
   let addIntakeMock;
+  let getFoodOptionsMock;
 
   beforeEach(() => {
     jest.resetAllMocks();
     setShowDialogMock = jest.fn();
+
+    getFoodOptionsMock = jest
+      .spyOn(BackendClient, "getFoodOptions")
+      .mockImplementation(() => {
+        return [
+          {
+            _id: "grapeId",
+            name: "Grapes",
+          },
+          {
+            _id: "orangeId",
+            name: "Oranges",
+          },
+        ];
+      });
   });
 
   it("should send addIntake request when submit is pressed", async () => {
@@ -23,27 +40,20 @@ describe("IntakeDialog", () => {
       });
     jest.spyOn(BackendClient, "addIntake").mockImplementation(addIntakeMock);
 
-    render(
-      <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
-    );
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
 
-    const autocompleteInput = screen.getByTestId("food-input");
-    const input = within(autocompleteInput).getByRole("combobox");
-    autocompleteInput.focus();
-    fireEvent.change(input, { target: { value: "Banana" } });
-    const option = screen.getByText("Banana");
-    fireEvent.click(option);
-
-    const quantity = screen.getByLabelText(/Quantity/i);
-    fireEvent.change(quantity, { target: { value: "1" } });
-
-    const submit = screen.getByText(/Submit/i);
-    fireEvent.click(submit);
+    setFoodValue("Grapes");
+    setQuantityValue(1);
+    fireEvent.click(screen.getByText(/Submit/i));
 
     await waitFor(() => {
       expect(addIntakeMock).toHaveBeenCalledWith(
         {
-          foodId: "Banana",
+          foodId: "grapeId",
           quantity: "1",
         },
         expect.any(Function),
@@ -51,6 +61,33 @@ describe("IntakeDialog", () => {
       );
       expect(setShowDialogMock).toHaveBeenCalledWith(false);
     });
+  });
+
+  it("should not addIntake if formData is missing", async () => {
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
+    fireEvent.click(screen.getByText(/Submit/i));
+
+    const errorElement = screen.getByText(/Food is required/i);
+
+    expect(errorElement).toBeInTheDocument();
+  });
+
+  it("should set Food to empty if newValue is empty", async () => {
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
+
+    setFoodValue("Grapes");
+    setFoodValue("");
+
+    const { input } = getAutocompleteInput("food-input");
+    expect(input.value).toBe("");
   });
 
   it("should setError to Something went wrong if addIntake call errors", async () => {
@@ -61,27 +98,20 @@ describe("IntakeDialog", () => {
       });
     jest.spyOn(BackendClient, "addIntake").mockImplementation(addIntakeMock);
 
-    render(
-      <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
-    );
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
 
-    const autocompleteInput = screen.getByTestId("food-input");
-    const input = within(autocompleteInput).getByRole("combobox");
-    autocompleteInput.focus();
-    fireEvent.change(input, { target: { value: "Banana" } });
-    const option = screen.getByText("Banana");
-    fireEvent.click(option);
-
-    const quantity = screen.getByLabelText(/Quantity/i);
-    fireEvent.change(quantity, { target: { value: "1" } });
-
-    const submit = screen.getByText(/Submit/i);
-    fireEvent.click(submit);
+    setFoodValue("Grapes");
+    setQuantityValue("1");
+    fireEvent.click(screen.getByText(/Submit/i));
 
     await waitFor(() => {
       expect(addIntakeMock).toHaveBeenCalledWith(
         {
-          foodId: "Banana",
+          foodId: "grapeId",
           quantity: "1",
         },
         expect.any(Function),
@@ -91,10 +121,22 @@ describe("IntakeDialog", () => {
     });
   });
 
-  it("should show add food dialog if Add Food button pressed", () => {
-    render(
-      <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
-    );
+  it("should display get food options for the food input", async () => {
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
+
+    expect(getFoodOptionsMock).toHaveBeenCalled();
+  });
+
+  it("should show add food dialog if Add Food button pressed", async () => {
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
 
     const addFoodButton = screen.getByText(/Add Food/i);
     fireEvent.click(addFoodButton);
@@ -104,10 +146,12 @@ describe("IntakeDialog", () => {
     expect(addFoodDialog).toBeInTheDocument();
   });
 
-  it("should stop displaying when pressing Cancel", () => {
-    render(
-      <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
-    );
+  it("should stop displaying when pressing Cancel", async () => {
+    await act(async () => {
+      render(
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+      );
+    });
 
     const cancelButton = screen.getByText(/Cancel/i);
     fireEvent.click(cancelButton);
@@ -115,3 +159,24 @@ describe("IntakeDialog", () => {
     expect(setShowDialogMock).toHaveBeenCalledWith(false);
   });
 });
+
+function setQuantityValue(value) {
+  const quantity = screen.getByLabelText(/Quantity/i);
+  fireEvent.change(quantity, { target: { value: value } });
+}
+
+function setFoodValue(value) {
+  const { autocompleteInput, input } = getAutocompleteInput("food-input");
+  autocompleteInput.focus();
+  fireEvent.change(input, { target: { value: value } });
+  if (value !== "") {
+    const option = screen.getByText(value);
+    fireEvent.click(option);
+  }
+}
+
+function getAutocompleteInput(autocompleteTestId) {
+  const autocompleteInput = screen.getByTestId(autocompleteTestId);
+  const input = within(autocompleteInput).getByRole("combobox");
+  return { autocompleteInput, input };
+}

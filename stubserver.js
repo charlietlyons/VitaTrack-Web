@@ -74,12 +74,23 @@ function handleAddFood(req, res) {
   res.status(200).send();
 }
 
+function handleGetFoodOptions(req, res) {
+  const foodRecords = router.db.get("food");
+
+  if (foodRecords) {
+    res.json(foodRecords);
+  } else {
+    res.status(401).json({ error: "No foods, sorry" });
+  }
+}
+
 server.get("/account-details", handleAccountDetails);
 server.post("/register-user", handleRegistration);
 server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
 server.get("/intake", handleGetIntakes);
 server.post("/add-intake", handleAddIntake);
+server.post("/food", handleGetFoodOptions);
 server.post("/add-food", handleAddFood);
 
 server.use(router);

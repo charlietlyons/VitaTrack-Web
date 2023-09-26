@@ -15,8 +15,8 @@ const Login = () => {
   const authContext = useContext(AuthContext);
   const { isLoggedIn, setIsLoggedIn } = authContext;
 
-  const submitHandler = useCallback(() => {
-    BackendClient.login(email, password, setIsLoggedIn, setError);
+  const submitHandler = useCallback(async () => {
+    setIsLoggedIn(await BackendClient.login(email, password, setError));
   }, [email, password, setIsLoggedIn, setError]);
 
   const enterToSubmitHandler = useCallback((e) => {

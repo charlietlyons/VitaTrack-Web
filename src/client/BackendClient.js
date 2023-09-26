@@ -7,33 +7,33 @@ const headers = {
 
 // TODO: convert to class and use async/await instead
 const BackendClient = {
-  login: (email, password, loginSuccessHandler, errorHandler) => {
+  login: async (email, password, errorSetter) => {
     try {
-      axios
-        .post(
-          `${url}/verify-user`,
-          { email: email, password: password },
-          {
-            headers: headers,
-          }
-        )
-        .then((response) => {
-          if (response.status === 200 && response.data && response.data.token) {
-            localStorage.setItem("token", response.data.token);
-            loginSuccessHandler(true);
-            errorHandler("");
-          } else if (response.status === 401) {
-            errorHandler("Invalid Credentials");
-          }
-        })
-        .catch(() => {
-          errorHandler(
-            "There was an issue verifying your account. Please try again later."
-          );
-        });
+      const response = await axios.post(
+        `${url}/verify-user`,
+        { email: email, password: password },
+        {
+          headers: headers,
+        }
+      );
+
+      if (response) {
+        if (response.status === 200 && response.data && response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          errorSetter("");
+          return true;
+        } else if (response.status === 401) {
+          errorSetter("Credentials provided are invalid.");
+        }
+      } else {
+        throw Error(
+          "There was an issue verifying your account. Please try again later."
+        );
+      }
     } catch (error) {
-      errorHandler(error.message);
+      errorSetter(error.message);
     }
+    return false;
   },
 
   register: (formData, registerSuccessHandler, registerFailureHandler) => {
@@ -110,6 +110,21 @@ const BackendClient = {
         });
     } catch (error) {
       failureHandler("Something went wrong.");
+    }
+  },
+
+  async getFoodOptions() {
+    try {
+      const response = await axios.get(`${url}/food`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      return response.data;
+    } catch (err) {
+      return [];
     }
   },
 

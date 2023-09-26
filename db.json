@@ -33,5 +33,35 @@
   ],
   "verify-token": {
     "token": ""
-  }
+  },
+  "food": [
+    {
+      "_id": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
+      "userId": "someUserId",
+      "name": "Grapes",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
+    },
+    {
+      "_id": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
+      "userId": "someUserId",
+      "name": "Bananas",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
+    }
+  ]
 }
