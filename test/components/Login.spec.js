@@ -6,10 +6,9 @@ import React from "react";
 import { MockAuthContextProvider } from "../../test/context/MockAuthContext";
 import BackendClient from "../../src/client/BackendClient";
 import { BrowserRouter } from "react-router-dom";
-import { waitFor } from "@testing-library/dom";
 
 describe("Login", () => {
-  describe("isLoggedIn is true", () => {
+  describe("isLoggedIn is false", () => {
     beforeEach(() => {
       jest.resetAllMocks();
       render(
@@ -94,7 +93,7 @@ describe("Login", () => {
     });
   });
 
-  describe("isLoggedIn is false", () => {
+  describe("isLoggedIn is true", () => {
     beforeEach(() => {
       jest.resetAllMocks();
       render(

@@ -90,8 +90,8 @@ server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
 server.get("/intake", handleGetIntakes);
 server.post("/add-intake", handleAddIntake);
-server.post("/food", handleGetFoodOptions);
-server.post("/add-food", handleAddFood);
+server.get("/food", handleGetFoodOptions);
+server.post("/food", handleAddFood);
 
 server.use(router);
 

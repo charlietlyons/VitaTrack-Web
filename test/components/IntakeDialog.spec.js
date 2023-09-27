@@ -11,11 +11,12 @@ describe("IntakeDialog", () => {
   let setShowDialogMock;
   let addIntakeMock;
   let getFoodOptionsMock;
+  let refreshIntakesMock;
 
   beforeEach(() => {
     jest.resetAllMocks();
     setShowDialogMock = jest.fn();
-
+    refreshIntakesMock = jest.fn();
     getFoodOptionsMock = jest
       .spyOn(BackendClient, "getFoodOptions")
       .mockImplementation(() => {
@@ -42,7 +43,7 @@ describe("IntakeDialog", () => {
 
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock} />
       );
     });
 
@@ -79,7 +80,7 @@ describe("IntakeDialog", () => {
   it("should set Food to empty if newValue is empty", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock}/>
       );
     });
 
@@ -100,7 +101,7 @@ describe("IntakeDialog", () => {
 
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock} />
       );
     });
 
@@ -124,7 +125,7 @@ describe("IntakeDialog", () => {
   it("should display get food options for the food input", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock}/>
       );
     });
 
@@ -134,7 +135,7 @@ describe("IntakeDialog", () => {
   it("should show add food dialog if Add Food button pressed", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock}/>
       );
     });
 
@@ -149,7 +150,7 @@ describe("IntakeDialog", () => {
   it("should stop displaying when pressing Cancel", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} />
+        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock} />
       );
     });
 

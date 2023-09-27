@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -6,22 +6,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import BackendClient from "../../client/BackendClient";
 
-const FoodLog = () => {
-  const [intakes, setIntakes] = useState([]);
-  const [error, setError] = useState();
-
-  useEffect(() => {
-    BackendClient.getIntakes(
-      (data) => {
-        setIntakes(data);
-      },
-      (error) => {
-        setError(error);
-      }
-    );
-  }, [setIntakes, setError]);
+const FoodLog = (props) => {
+  const { intakes, error } = props;
 
   return !error ? (
     <Table>

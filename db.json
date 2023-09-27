@@ -10,25 +10,55 @@
   ],
   "intakes": [
     {
-      "_id": "someIntakeId1",
+      "_id": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
       "userId": "someUserId1",
       "dayId": "someDayId",
       "foodId": "someFoodId1",
-      "quantity": 10000
+      "quantity": 10000,
+      "name": "Grapes",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
     },
     {
-      "_id": "someIntakeId2",
+      "_id": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
       "userId": "someUserId2",
       "dayId": "someDayId",
       "foodId": "someFoodId2",
-      "quantity": 10
+      "quantity": 10,
+      "name": "Grapes",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
     },
     {
-      "_id": "someIntakeId3",
+      "_id": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
       "userId": "someUserId3",
       "dayId": "someDayId",
       "foodId": "someFoodId3",
-      "quantity": 9
+      "quantity": 9,
+      "name": "Bananas",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
     }
   ],
   "verify-token": {

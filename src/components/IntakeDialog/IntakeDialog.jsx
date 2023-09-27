@@ -8,7 +8,7 @@ import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 import AddIntakeValidator from "../../validators/AddIntakeValidator";
 
 const IntakeDialog = (props) => {
-  const { showDialog, setShowDialog } = props;
+  const { showDialog, setShowDialog, refreshIntakes } = props;
   const [showAddFoodDialog, setShowAddFoodDialog] = useState(false);
   const [food, setFood] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -24,7 +24,6 @@ const IntakeDialog = (props) => {
       }));
       setFoodOptions(foodNames);
     }
-
     getData();
   }, [setFoodOptions]);
 
@@ -41,13 +40,14 @@ const IntakeDialog = (props) => {
         () => {
           setFood("");
           setQuantity("");
+          refreshIntakes()
           setShowDialog(false);
         },
         (error) => {
           setError("Something went wrong: ", error);
         }
       );
-  }, [setShowDialog, setError, food, quantity]);
+  }, [setShowDialog, setError, refreshIntakes, food, quantity]);
 
   const submitOnEnter = useEnterButtonSubmit(submitHandler);
 
