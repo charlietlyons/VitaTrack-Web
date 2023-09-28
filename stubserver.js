@@ -70,6 +70,10 @@ function handleAddIntake(req, res) {
   res.status(200).send();
 }
 
+function handleDeleteIntake(req, res) {
+  res.status(200).send(true);
+}
+
 function handleAddFood(req, res) {
   res.status(200).send();
 }
@@ -90,6 +94,7 @@ server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
 server.get("/intake", handleGetIntakes);
 server.post("/add-intake", handleAddIntake);
+server.delete("/intake/:id", handleDeleteIntake);
 server.get("/food", handleGetFoodOptions);
 server.post("/food", handleAddFood);
 

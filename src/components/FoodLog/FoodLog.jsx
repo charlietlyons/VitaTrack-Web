@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -6,9 +6,22 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import BackendClient from "../../client/BackendClient";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const FoodLog = (props) => {
-  const { intakes, error } = props;
+  const { intakes, error, setError } = props;
+
+  const deleteIntake = useCallback(
+    async (intakeId) => {
+      const result = await BackendClient.deleteIntake(intakeId);
+
+      if (!result) {
+        setError("Could not delete intake. Try again later.");
+      }
+    },
+    [setError]
+  );
 
   return !error ? (
     <Table>
@@ -27,6 +40,12 @@ const FoodLog = (props) => {
           intakes.map((intake, index) => {
             return (
               <TableRow key={index} data-testid={`intake-${index}`}>
+                <TableCell>
+                  <CloseOutlinedIcon
+                    data-testid={`intake-delete-${index}`}
+                    onClick={() => deleteIntake(intake._id)}
+                  />
+                </TableCell>
                 <TableCell>{intake.name}</TableCell>
                 <TableCell>{intake.quantity}</TableCell>
                 <TableCell>{intake.calories}</TableCell>

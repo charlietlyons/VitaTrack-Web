@@ -5,7 +5,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-// TODO: convert to class and use async/await instead
+// TODO: convert to class/hook? and use async/await instead
 const BackendClient = {
   login: async (email, password, errorSetter) => {
     try {
@@ -110,6 +110,21 @@ const BackendClient = {
         });
     } catch (error) {
       failureHandler("Something went wrong.");
+    }
+  },
+
+  async deleteIntake(intakeId) {
+    try {
+      const response = await axios.delete(`${url}/intake/${intakeId}`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return false;
     }
   },
 

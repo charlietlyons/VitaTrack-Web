@@ -22,11 +22,11 @@ const DailyStats = () => {
         setError(error);
       }
     );
-  }, [setIntakes, setError])
+  }, [setIntakes, setError]);
 
   useEffect(() => {
     refreshIntakes();
-  }, [refreshIntakes])
+  }, [refreshIntakes]);
 
   return isLoggedIn ? (
     <PageContainer>
@@ -35,7 +35,7 @@ const DailyStats = () => {
       <Button variant="contained" onClick={() => setShowAddIntakeForm(true)}>
         Add Intake
       </Button>
-      <FoodLog intakes={intakes} error={error}/>
+      <FoodLog intakes={intakes} error={error} setError={setError} />
       <IntakeDialog
         showDialog={showAddIntakeForm}
         setShowDialog={setShowAddIntakeForm}

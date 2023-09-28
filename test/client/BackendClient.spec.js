@@ -1,5 +1,6 @@
 import axios from "axios";
 import BackendClient from "../../src/client/BackendClient";
+import { useCallback } from "react";
 
 jest.mock("axios");
 
@@ -245,6 +246,34 @@ describe("BackendClient", () => {
 
       expect(mockSuccessHandler).not.toHaveBeenCalled();
       expect(mockFailureHandler).toHaveBeenCalled();
+    });
+  });
+
+  describe("deleteIntake", () => {
+    it("should return true if intake successfully deleted", async () => {
+      axios.delete.mockResolvedValue({ data: true });
+
+      const result = await BackendClient.deleteIntake("intakeId");
+
+      expect(result).toBe(true);
+    });
+
+    it("should return false if intake successfully deleted", async () => {
+      axios.delete.mockResolvedValue({ data: false });
+
+      const result = await BackendClient.deleteIntake("intakeId");
+
+      expect(result).toBe(false);
+    });
+
+    it("should return false if error", async () => {
+      axios.delete.mockImplementation(() => {
+        throw Error("hatred");
+      });
+
+      const result = await BackendClient.deleteIntake("intakeId");
+
+      expect(result).toBe(false);
     });
   });
 
