@@ -6,6 +6,7 @@ import React from "react";
 import { fireEvent, waitFor } from "@testing-library/dom";
 import BackendClient from "../../src/client/BackendClient";
 import "@testing-library/jest-dom";
+import { fillAllFoodDialogInputsAndSubmit } from "./FoodDialog.spec";
 
 describe("IntakeDialog", () => {
   let setShowDialogMock;
@@ -43,7 +44,11 @@ describe("IntakeDialog", () => {
 
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock} />
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
       );
     });
 
@@ -80,7 +85,11 @@ describe("IntakeDialog", () => {
   it("should set Food to empty if newValue is empty", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock}/>
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
       );
     });
 
@@ -101,7 +110,11 @@ describe("IntakeDialog", () => {
 
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock} />
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
       );
     });
 
@@ -125,7 +138,11 @@ describe("IntakeDialog", () => {
   it("should display get food options for the food input", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock}/>
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
       );
     });
 
@@ -135,7 +152,11 @@ describe("IntakeDialog", () => {
   it("should show add food dialog if Add Food button pressed", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock}/>
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
       );
     });
 
@@ -150,7 +171,11 @@ describe("IntakeDialog", () => {
   it("should stop displaying when pressing Cancel", async () => {
     await act(async () => {
       render(
-        <IntakeDialog showDialog={true} setShowDialog={setShowDialogMock} refreshIntakes={refreshIntakesMock} />
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
       );
     });
 
@@ -158,6 +183,37 @@ describe("IntakeDialog", () => {
     fireEvent.click(cancelButton);
 
     expect(setShowDialogMock).toHaveBeenCalledWith(false);
+  });
+
+  it("should set add food dialog to false and get data when ", async () => {
+    addIntakeMock = jest
+      .fn()
+      .mockImplementation((body, successHandler, failHandler) => {
+        successHandler();
+      });
+    jest.spyOn(BackendClient, "addIntake").mockImplementation(addIntakeMock);
+
+    await act(async () => {
+      render(
+        <IntakeDialog
+          showDialog={true}
+          setShowDialog={setShowDialogMock}
+          refreshIntakes={refreshIntakesMock}
+        />
+      );
+    });
+
+    const addFoodButton = await screen.findByText(/Add Food/i);
+    fireEvent.click(addFoodButton);
+
+    const submitButtonElement = await screen.findByRole("button", {
+      name: /Add/i,
+    });
+    await fillAllFoodDialogInputsAndSubmit(submitButtonElement);
+    await waitFor(() => {
+      const proteinElement = screen.queryByLabelText(/Protein/i);
+      expect(proteinElement).not.toBeInTheDocument();
+    });
   });
 });
 

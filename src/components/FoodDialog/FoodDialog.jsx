@@ -33,7 +33,7 @@ const FoodDialog = (props) => {
     description: "",
     imageUrl: "",
   });
-  const { showDialog, setShowDialog } = props;
+  const { showDialog, addFoodCloseHandler } = props;
   const [error, setError] = useState("");
   const submitHandler = useCallback(() => {
     if (AddFoodValidator.validate(state, setError)) {
@@ -41,14 +41,14 @@ const FoodDialog = (props) => {
       BackendClient.addFood(
         state,
         () => {
-          setShowDialog(false);
+          addFoodCloseHandler();
         },
         (err) => {
           setError("Something went wrong: ", err);
         }
       );
     }
-  }, [setShowDialog, state, setError]);
+  }, [addFoodCloseHandler, state, setError]);
 
   const changeHandler = useReducerChangeHandler(dispatch);
   const submitOnEnter = useEnterButtonSubmit(submitHandler);
@@ -143,7 +143,7 @@ const FoodDialog = (props) => {
           </Button>,
           <Button
             variant="outlined"
-            onClick={() => setShowDialog(false)}
+            onClick={addFoodCloseHandler}
             fullWidth
           >
             Close

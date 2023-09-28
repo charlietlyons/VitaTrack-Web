@@ -18,14 +18,20 @@ describe("FoodDialog", () => {
     description: "test",
     imageUrl: "test",
   };
-  let clientSpy;
+  let clientSpy, addFoodCloseHandlerSpy;
 
   beforeEach(() => {
     clientSpy = jest.spyOn(BackendClient, "addFood");
+    addFoodCloseHandlerSpy = jest.fn();
   });
 
-  it("should display error if any input is empty", () => {
-    render(<FoodDialog showDialog={true} />);
+  it("should display error if any input is empty", async () => {
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const [
       nameElement,
@@ -37,41 +43,41 @@ describe("FoodDialog", () => {
       fatElement,
       accessElement,
       descriptionElement,
-    ] = getInputs();
+    ] = getFoodDialogInputs();
     const submitButtonElement = screen.getByRole("button", {
       name: /Add/i,
     });
 
     fireEvent.click(submitButtonElement);
-    expectError("Name is required");
+    await expectError("Name is required");
 
     fillInputAndSubmit(nameElement, submitButtonElement);
-    expectError("Serving Size is required");
+    await expectError("Serving Size is required");
 
     fillInputAndSubmit(servingSizeElement, submitButtonElement);
-    expectError("Serving Metric is required");
+    await expectError("Serving Metric is required");
 
     fillInputAndSubmit(servingMetricElement, submitButtonElement);
-    expectError("Calories is required");
+    await expectError("Calories is required");
 
     fillInputAndSubmit(caloriesElement, submitButtonElement);
-    expectError("Protein is required");
+    await expectError("Protein is required");
 
     fillInputAndSubmit(proteinElement, submitButtonElement);
-    expectError("Carbs is required");
+    await expectError("Carbs is required");
 
     fillInputAndSubmit(carbsElement, submitButtonElement);
-    expectError("Fat is required");
+    await expectError("Fat is required");
 
     fillInputAndSubmit(fatElement, submitButtonElement);
-    expectError("Access is required");
+    await expectError("Access is required");
 
     // TODO: make these last two optional
     fillInputAndSubmit(accessElement, submitButtonElement);
-    expectError("Description is required");
+    await expectError("Description is required");
 
     fillInputAndSubmit(descriptionElement, submitButtonElement);
-    expectError("Image URL is required");
+    await expectError("Image URL is required");
   });
 
   it("should addFood if form data is valid", () => {
@@ -79,13 +85,18 @@ describe("FoodDialog", () => {
       .spyOn(AddFoodValidator, "validate")
       .mockReturnValueOnce(true);
 
-    render(<FoodDialog showDialog={true} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const submitButtonElement = screen.getByRole("button", {
       name: /Add/i,
     });
 
-    fillAllInputsAndSubmit(submitButtonElement);
+    fillAllFoodDialogInputsAndSubmit(submitButtonElement);
 
     expect(clientSpy).toHaveBeenCalledWith(
       testPayload,
@@ -99,16 +110,21 @@ describe("FoodDialog", () => {
   });
 
   it("should setError to empty and send addFood request if inputs not empty", async () => {
-    render(<FoodDialog showDialog={true} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
     const submitButtonElement = screen.getByRole("button", {
       name: /Add/i,
     });
 
     fireEvent.click(submitButtonElement);
 
-    expectError("Name is required");
+    await expectError("Name is required");
 
-    fillAllInputsAndSubmit(submitButtonElement);
+    fillAllFoodDialogInputsAndSubmit(submitButtonElement);
 
     expectNoError();
 
@@ -124,17 +140,21 @@ describe("FoodDialog", () => {
       successHandler();
     });
 
-    const setShowDialogMock = jest.fn();
-    render(<FoodDialog showDialog={true} setShowDialog={setShowDialogMock} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const submitButtonElement = screen.getByRole("button", {
       name: /Add/i,
     });
 
-    fillAllInputsAndSubmit(submitButtonElement);
+    fillAllFoodDialogInputsAndSubmit(submitButtonElement);
 
     expectNoError();
-    expect(setShowDialogMock).toHaveBeenCalledWith(false);
+    expect(addFoodCloseHandlerSpy).toHaveBeenCalled();
     expect(clientSpy).toHaveBeenCalledWith(
       testPayload,
       expect.any(Function),
@@ -142,12 +162,17 @@ describe("FoodDialog", () => {
     );
   });
 
-  it("should setError to Something went wrong, if addFood call fails", () => {
+  it("should setError to Something went wrong, if addFood call fails", async () => {
     clientSpy.mockImplementationOnce((state, successHandler, failHandler) => {
       failHandler("test");
     });
 
-    render(<FoodDialog showDialog={true} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const servingMetricElement = screen.getByLabelText(/Serving Metric/i);
     const submitButtonElement = screen.getByRole("button", {
@@ -156,8 +181,8 @@ describe("FoodDialog", () => {
 
     expect(servingMetricElement).toBeInTheDocument();
 
-    fillAllInputsAndSubmit(submitButtonElement);
-    expectError("Something went wrong");
+    fillAllFoodDialogInputsAndSubmit(submitButtonElement);
+    await expectError("Something went wrong");
 
     expect(clientSpy).toHaveBeenCalledWith(
       testPayload,
@@ -167,8 +192,12 @@ describe("FoodDialog", () => {
   });
 
   it("should stop displaying when close button pressed", () => {
-    const setShowDialogMock = jest.fn();
-    render(<FoodDialog showDialog={true} setShowDialog={setShowDialogMock} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const closeButtonElement = screen.getByRole("button", {
       name: /Close/i,
@@ -176,24 +205,28 @@ describe("FoodDialog", () => {
 
     fireEvent.click(closeButtonElement);
 
-    expect(setShowDialogMock).toHaveBeenCalledWith(false);
+    expect(addFoodCloseHandlerSpy).toHaveBeenCalled();
   });
 
-  it("should stop displaying after add food call", () => {
+  it("should stop displaying after add food call", async () => {
     clientSpy.mockImplementationOnce((state, successHandler, failHandler) => {
       successHandler();
     });
 
-    const setShowDialogMock = jest.fn();
-    render(<FoodDialog showDialog={true} setShowDialog={setShowDialogMock} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const submitButtonElement = screen.getByRole("button", {
       name: /Add/i,
     });
 
-    fillAllInputsAndSubmit(submitButtonElement);
+    await fillAllFoodDialogInputsAndSubmit(submitButtonElement);
 
-    expect(setShowDialogMock).toHaveBeenCalledWith(false);
+    expect(addFoodCloseHandlerSpy).toHaveBeenCalled();
   });
 
   it("should displaying after add food call", () => {
@@ -201,16 +234,20 @@ describe("FoodDialog", () => {
       failHandler();
     });
 
-    const setShowDialogMock = jest.fn();
-    render(<FoodDialog showDialog={true} setShowDialog={setShowDialogMock} />);
+    render(
+      <FoodDialog
+        showDialog={true}
+        addFoodCloseHandler={addFoodCloseHandlerSpy}
+      />
+    );
 
     const submitButtonElement = screen.getByRole("button", {
       name: /Add/i,
     });
 
-    fillAllInputsAndSubmit(submitButtonElement);
+    fillAllFoodDialogInputsAndSubmit(submitButtonElement);
 
-    expect(setShowDialogMock).not.toHaveBeenCalledWith(false);
+    expect(addFoodCloseHandlerSpy).not.toHaveBeenCalledWith(false);
   });
 });
 
@@ -221,7 +258,7 @@ function fillInputAndSubmit(inputElement, submitButtonElement) {
 
 async function expectError(error) {
   const errorElement = await screen.findByTestId("form-error");
-  expect(errorElement).not.toHaveTextContent(error);
+  expect(errorElement).toHaveTextContent(error);
 }
 
 function expectNoError() {
@@ -233,14 +270,14 @@ function fillInput(inputElement) {
   fireEvent.change(inputElement, { target: { value: "test" } });
 }
 
-function fillAllInputsAndSubmit(submitButtonElement) {
-  getInputs().forEach((input) => {
+export async function fillAllFoodDialogInputsAndSubmit(submitButtonElement) {
+  getFoodDialogInputs().forEach((input) => {
     fillInput(input);
   });
   fireEvent.click(submitButtonElement);
 }
 
-function getInputs() {
+function getFoodDialogInputs() {
   const nameElement = screen.getByLabelText(/Name/i);
   const servingSizeElement = screen.getByLabelText(/Serving Size/i);
   const servingMetricElement = screen.getByLabelText(/Serving Metric/i);

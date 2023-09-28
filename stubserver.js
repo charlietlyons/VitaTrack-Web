@@ -93,7 +93,7 @@ server.post("/register-user", handleRegistration);
 server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
 server.get("/intake", handleGetIntakes);
-server.post("/add-intake", handleAddIntake);
+server.post("/intake", handleAddIntake);
 server.delete("/intake/:id", handleDeleteIntake);
 server.get("/food", handleGetFoodOptions);
 server.post("/food", handleAddFood);

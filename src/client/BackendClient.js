@@ -17,18 +17,12 @@ const BackendClient = {
         }
       );
 
-      if (response) {
-        if (response.status === 200 && response.data && response.data.token) {
-          localStorage.setItem("token", response.data.token);
-          errorSetter("");
-          return true;
-        } else if (response.status === 401) {
-          errorSetter("Credentials provided are invalid.");
-        }
-      } else {
-        throw Error(
-          "There was an issue verifying your account. Please try again later."
-        );
+      if (response.status === 200 && response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        errorSetter("");
+        return true;
+      } else if (response.status === 401) {
+        errorSetter("Credentials provided are invalid.");
       }
     } catch (error) {
       errorSetter(error.message);
@@ -36,19 +30,20 @@ const BackendClient = {
     return false;
   },
 
-  register: (formData, registerSuccessHandler, registerFailureHandler) => {
+  register: async (
+    formData,
+    registerSuccessHandler,
+    registerFailureHandler
+  ) => {
     try {
-      axios
-        .post(`${url}/register-user`, formData, {
-          headers: headers,
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            registerSuccessHandler();
-          } else {
-            registerFailureHandler("User already exists");
-          }
-        });
+      const response = await axios.post(`${url}/register-user`, formData, {
+        headers: headers,
+      });
+      if (response.status === 200) {
+        registerSuccessHandler();
+      } else {
+        registerFailureHandler("User already exists");
+      }
     } catch (error) {
       registerFailureHandler("An error occurred. Please try again later.");
     }
@@ -75,7 +70,7 @@ const BackendClient = {
     try {
       axios
         .post(
-          `${url}/add-intake`,
+          `${url}/intake`,
           { ...intake },
           {
             headers: {
@@ -122,7 +117,7 @@ const BackendClient = {
         },
       });
 
-      return response.data;
+      return response;
     } catch (error) {
       return false;
     }
@@ -147,7 +142,7 @@ const BackendClient = {
     try {
       axios
         .post(
-          `${url}/add-food`,
+          `${url}/food`,
           { ...body },
           {
             headers: {
@@ -163,23 +158,20 @@ const BackendClient = {
     }
   },
 
-  verifyToken: (token, callback) => {
+  verifyToken: async (token, callback) => {
     try {
-      axios
-        .post(
-          `${url}/verify-token`,
-          { token: token },
-          {
-            headers: headers,
-          }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            callback(true);
-          } else {
-            callback(false);
-          }
-        });
+      const response = await axios.post(
+        `${url}/verify-token`,
+        { token: token },
+        {
+          headers: headers,
+        }
+      );
+      if (response && response.status === 200) {
+        callback(true);
+      } else {
+        callback(false);
+      }
     } catch (error) {
       callback(false);
     }

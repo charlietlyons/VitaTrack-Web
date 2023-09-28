@@ -10,17 +10,17 @@ import BackendClient from "../../client/BackendClient";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const FoodLog = (props) => {
-  const { intakes, error, setError } = props;
+  const { intakes, error, setError, refreshIntakes } = props;
 
   const deleteIntake = useCallback(
     async (intakeId) => {
       const result = await BackendClient.deleteIntake(intakeId);
-
       if (!result) {
         setError("Could not delete intake. Try again later.");
       }
+      refreshIntakes();
     },
-    [setError]
+    [setError, refreshIntakes]
   );
 
   return !error ? (

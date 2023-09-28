@@ -6,6 +6,13 @@ import userEvent from "@testing-library/user-event";
 import BackendClient from "../../src/client/BackendClient";
 
 describe("FoodLog", () => {
+  let refreshIntakesMock, setErrorMock;
+
+  beforeEach(() => {
+    refreshIntakesMock = jest.fn();
+    setErrorMock = jest.fn();
+  });
+
   it("should show intakes if not error", async () => {
     render(
       <FoodLog
@@ -20,6 +27,8 @@ describe("FoodLog", () => {
           },
         ]}
         error={null}
+        setError={setErrorMock}
+        refreshIntakes={refreshIntakesMock}
       />
     );
 
@@ -28,7 +37,14 @@ describe("FoodLog", () => {
   });
 
   it("should show error if error", async () => {
-    render(<FoodLog intakes={[]} error={"bad news chief"} />);
+    render(
+      <FoodLog
+        intakes={[]}
+        error={"bad news chief"}
+        setError={setErrorMock}
+        refreshIntakes={refreshIntakesMock}
+      />
+    );
 
     const errorElement = await screen.findByTestId("error");
 
@@ -36,8 +52,6 @@ describe("FoodLog", () => {
   });
 
   it("should remove intake when delete is successful", async () => {
-    const setErrorMock = jest.fn();
-
     const deleteIntakeMock = jest.fn().mockReturnValue(true);
     BackendClient.deleteIntake = deleteIntakeMock;
 
@@ -55,6 +69,7 @@ describe("FoodLog", () => {
         ]}
         error={null}
         setError={setErrorMock}
+        refreshIntakes={refreshIntakesMock}
       />
     );
 
@@ -66,8 +81,6 @@ describe("FoodLog", () => {
   });
 
   it("should set error when delete is unsuccessful", async () => {
-    const setErrorMock = jest.fn();
-
     const deleteIntakeMock = jest.fn().mockReturnValue(false);
     BackendClient.deleteIntake = deleteIntakeMock;
 
@@ -85,6 +98,7 @@ describe("FoodLog", () => {
         ]}
         error={null}
         setError={setErrorMock}
+        refreshIntakes={refreshIntakesMock}
       />
     );
 

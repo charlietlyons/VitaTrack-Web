@@ -65,16 +65,6 @@ describe("BackendClient", () => {
 
       expect(setErrorSpy).toHaveBeenCalledWith("error");
     });
-
-    it("should throw error if no response", async () => {
-      axios.post.mockResolvedValue(undefined);
-
-      await BackendClient.login("username", "password", errorSetterSpy);
-
-      expect(errorSetterSpy).toHaveBeenCalledWith(
-        "There was an issue verifying your account. Please try again later."
-      );
-    });
   });
 
   describe("register", () => {
@@ -251,7 +241,7 @@ describe("BackendClient", () => {
 
   describe("deleteIntake", () => {
     it("should return true if intake successfully deleted", async () => {
-      axios.delete.mockResolvedValue({ data: true });
+      axios.delete.mockResolvedValue(true);
 
       const result = await BackendClient.deleteIntake("intakeId");
 
@@ -259,7 +249,7 @@ describe("BackendClient", () => {
     });
 
     it("should return false if intake successfully deleted", async () => {
-      axios.delete.mockResolvedValue({ data: false });
+      axios.delete.mockResolvedValue(false);
 
       const result = await BackendClient.deleteIntake("intakeId");
 

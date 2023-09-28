@@ -16,15 +16,16 @@ const IntakeDialog = (props) => {
   const [foodOptions, setFoodOptions] = useState([]);
 
   useEffect(() => {
-    async function getData() {
-      const foodOptionsData = await BackendClient.getFoodOptions();
-      const foodNames = await foodOptionsData.map((option) => ({
-        label: option.name,
-        id: option._id,
-      }));
-      setFoodOptions(foodNames);
-    }
     getData();
+  }, [getData]);
+
+  const getData = useCallback(async () => {
+    const foodOptionsData = await BackendClient.getFoodOptions();
+    const foodNames = await foodOptionsData.map((option) => ({
+      label: option.name,
+      id: option._id,
+    }));
+    setFoodOptions(foodNames);
   }, [setFoodOptions]);
 
   const submitHandler = useCallback(() => {
@@ -40,7 +41,7 @@ const IntakeDialog = (props) => {
         () => {
           setFood("");
           setQuantity("");
-          refreshIntakes()
+          refreshIntakes();
           setShowDialog(false);
         },
         (error) => {
@@ -68,6 +69,11 @@ const IntakeDialog = (props) => {
     },
     [setQuantity]
   );
+
+  const addFoodCloseHandler = useCallback(async () => {
+    await getData();
+    setShowAddFoodDialog(false);
+  });
 
   return (
     <DialogContainer title="Add Intake" showDialog={showDialog} size="md">
@@ -119,7 +125,7 @@ const IntakeDialog = (props) => {
       />
       <FoodDialog
         showDialog={showAddFoodDialog}
-        setShowDialog={setShowAddFoodDialog}
+        addFoodCloseHandler={async () => await addFoodCloseHandler()}
       ></FoodDialog>
     </DialogContainer>
   );
