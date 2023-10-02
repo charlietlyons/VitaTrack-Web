@@ -159,37 +159,27 @@ describe("BackendClient", () => {
     it("should call successHandler if response exists", async () => {
       const mockSuccessHandler = jest.fn();
       const mockFailureHandler = jest.fn();
-      const response = { status: 200 };
+      const expectedResponse = { status: 200 };
 
-      axios.post.mockResolvedValue(response);
+      axios.post.mockResolvedValue(expectedResponse);
 
-      await BackendClient.addIntake(
-        { intake: "someIntake" },
-        mockSuccessHandler,
-        mockFailureHandler
-      );
+      const response = await BackendClient.addIntake({
+        intake: "someIntake",
+      });
 
-      expect(mockSuccessHandler).toHaveBeenCalled();
-      expect(mockFailureHandler).not.toHaveBeenCalled();
+      expect(response).toEqual(expectedResponse);
     });
 
     it("should call errorHandler if error", async () => {
-      const mockSuccessHandler = jest.fn();
-      const mockFailureHandler = jest.fn();
       const error = new Error("bad time.com");
 
       axios.post.mockImplementation(() => {
         throw error;
       });
 
-      await BackendClient.addIntake(
-        { intake: "someIntake" },
-        mockSuccessHandler,
-        mockFailureHandler
-      );
+      const response = await BackendClient.addIntake({ intake: "someIntake" });
 
-      expect(mockSuccessHandler).not.toHaveBeenCalled();
-      expect(mockFailureHandler).toHaveBeenCalledWith(error);
+      expect(response).toEqual(false);
     });
   });
 
@@ -238,6 +228,70 @@ describe("BackendClient", () => {
       expect(mockFailureHandler).toHaveBeenCalled();
     });
   });
+
+  describe("getIntakeById", () => {
+    it("should call successHandler if response exists", async () => {
+      const intakeId = "b4bc2367-b42e-406a-ad3e-693f2307c49c";
+      const expectedResponse = {
+        data: {
+          _id: intakeId,
+          userId: "someUserId1",
+          dayId: "someDayId",
+          foodId: "someFoodId1",
+          quantity: 10000,
+          name: "Grapes",
+          calories: 1000,
+          protein: 1000,
+          carbs: 3000,
+          fat: 1,
+          servingSize: 3,
+          servingUnit: "g",
+          access: "PUBLIC_ACCESS",
+          description: "",
+          imageUrl: "",
+        },
+      };
+
+      axios.get.mockResolvedValue(expectedResponse);
+
+      const response = await BackendClient.getIntakeById(intakeId);
+
+      expect(response).toEqual(expectedResponse.data);
+    });
+
+    it("should call failureHandler when axios request fails", async () => {
+      axios.get.mockRejectedValue(new Error("Network Error"));
+
+      const response = await BackendClient.getIntakeById("intakeId");
+
+      expect(response).toEqual(false);
+    });
+  });
+
+  describe("updateIntake", () => {
+    it("should return response", async () => {
+      const expectedResponse = true
+      axios.patch.mockResolvedValue(expectedResponse);
+
+      const response = await BackendClient.updateIntake({
+        "name": "Plumber Juice"
+      });
+
+      expect(response).toBe(expectedResponse)
+    });
+
+    it("should return false if error", async () => {
+      axios.patch.mockImplementation(() => {
+        throw Error("All of of plumbers juices");
+      });
+
+      const response = await BackendClient.updateIntake({
+        "name": "Plumber Juice"
+      });
+
+      expect(response).toBe(false);
+    });
+  })
 
   describe("deleteIntake", () => {
     it("should return true if intake successfully deleted", async () => {

@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import FoodLog from "../../src/components/FoodLog/FoodLog";
 import userEvent from "@testing-library/user-event";
 import BackendClient from "../../src/client/BackendClient";
+import { IsoTwoTone } from "@mui/icons-material";
 
 describe("FoodLog", () => {
   let refreshIntakesMock, setErrorMock;
@@ -107,5 +108,32 @@ describe("FoodLog", () => {
 
     expect(deleteIntakeMock).toHaveBeenCalled();
     expect(setErrorMock).toHaveBeenCalled();
+  });
+
+  it("should show update dialog when clicking pencil", async () => {
+    render(
+      <FoodLog
+        intakes={[
+          {
+            _id: "test",
+            name: "test",
+            quantity: "test",
+            calories: "test",
+            protein: "test",
+            carbs: "test",
+            fat: "test",
+          },
+        ]}
+        error={null}
+        setError={setErrorMock}
+        refreshIntakes={refreshIntakesMock}
+      />
+    );
+
+    const editButton = await screen.findByTestId("intake-edit-0");
+    await userEvent.click(editButton);
+
+    const updateDialog = await screen.findByTestId("food-input");
+    expect(updateDialog).toBeInTheDocument();
   });
 });

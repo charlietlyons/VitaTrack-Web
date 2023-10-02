@@ -66,22 +66,21 @@ const BackendClient = {
     }
   },
 
-  addIntake(intake, successHandler, failureHandler) {
+  async addIntake(intake) {
     try {
-      axios
-        .post(
-          `${url}/intake`,
-          { ...intake },
-          {
-            headers: {
-              ...headers,
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(successHandler);
+      const response = await axios.post(
+        `${url}/intake`,
+        { ...intake },
+        {
+          headers: {
+            ...headers,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response;
     } catch (error) {
-      failureHandler(error);
+      return false;
     }
   },
 
@@ -105,6 +104,40 @@ const BackendClient = {
         });
     } catch (error) {
       failureHandler("Something went wrong.");
+    }
+  },
+
+  async getIntakeById(intakeId) {
+    try {
+      const response = await axios.get(`${url}/intake/${intakeId}`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      return response.data;
+    } catch (err) {
+      return false;
+    }
+  },
+
+  async updateIntake(formData) {
+    try {
+      const response = await axios.patch(
+        `${url}/intake/${formData.foodId}`,
+        formData,
+        {
+          headers: {
+            ...headers,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      return response;
+    } catch (error) {
+      return false;
     }
   },
 

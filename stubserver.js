@@ -66,6 +66,16 @@ function handleGetIntakes(req, res) {
   }
 }
 
+async function handleGetIntakeById(req, res) {
+  const intakeRecords = router.db.get("intakes").value();
+  const firstIntake = intakeRecords[0];
+  res.json(firstIntake);
+}
+
+function handlePatchIntake(req, res) {
+  res.status(200).send();
+}
+
 function handleAddIntake(req, res) {
   res.status(200).send();
 }
@@ -93,6 +103,8 @@ server.post("/register-user", handleRegistration);
 server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
 server.get("/intake", handleGetIntakes);
+server.get("/intake/:id", handleGetIntakeById);
+server.patch("/intake/:id", handlePatchIntake);
 server.post("/intake", handleAddIntake);
 server.delete("/intake/:id", handleDeleteIntake);
 server.get("/food", handleGetFoodOptions);

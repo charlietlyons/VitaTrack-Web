@@ -10,6 +10,7 @@
     "stub-server": "kill-port 3000 && node stubserver.js",
     "kill-stub-server": "kill-port 3000",
     "test": "concurrently \"npm run stub-server\" \"jest --env=jsdom\"",
+    "test:one": "concurrently \"npm run stub-server\" \"jest -t IntakeDialog --coverage --env=jsdom\"",
     "test:coverage": "concurrently \"npm run stub-server\" \"jest --env=jsdom --coverage\"",
     "test:watch": "concurrently \"npm run stub-server\" \"jest --watchAll --env=jsdom\""
   },

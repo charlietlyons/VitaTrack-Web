@@ -35,8 +35,14 @@ const DailyStats = () => {
       <Button variant="contained" onClick={() => setShowAddIntakeForm(true)}>
         Add Intake
       </Button>
-      <FoodLog intakes={intakes} error={error} setError={setError} refreshIntakes={refreshIntakes} />
+      <FoodLog
+        intakes={intakes}
+        error={error}
+        setError={setError}
+        refreshIntakes={refreshIntakes}
+      />
       <IntakeDialog
+        intakeId={false}
         showDialog={showAddIntakeForm}
         setShowDialog={setShowAddIntakeForm}
         refreshIntakes={refreshIntakes}
