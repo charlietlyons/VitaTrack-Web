@@ -125,7 +125,7 @@ const BackendClient = {
   async updateIntake(formData) {
     try {
       const response = await axios.patch(
-        `${url}/intake/${formData.foodId}`,
+        `${url}/intake`,
         formData,
         {
           headers: {

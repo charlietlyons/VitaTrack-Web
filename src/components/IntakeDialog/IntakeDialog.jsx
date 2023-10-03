@@ -71,6 +71,7 @@ const IntakeDialog = (props) => {
     }
 
     const formData = {
+      id: intakeId,
       foodId: selectedFoodData._id,
       quantity: quantity,
     };
