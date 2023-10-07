@@ -8,7 +8,7 @@ describe("checkForEmpties", () => {
       {
         name: "test",
         servingSize: "test",
-        servingMetric: "test",
+        servingUnit: "test",
         calories: "test",
         protein: "test",
         carbs: "test",
@@ -32,7 +32,7 @@ describe("checkForEmpties", () => {
         {
           name: "",
           servingSize: "",
-          servingMetric: "",
+          servingUnit: "",
           calories: "",
           protein: "",
           carbs: "",

@@ -69,7 +69,7 @@ export const DialogContainer = (props) => {
   return (
     <Dialog
       open={showDialog}
-      maxWidth={ size || "sm"}
+      maxWidth={size || "sm"}
       fullWidth
       sx={{
         backgroundColor: "rgb(130, 255, 141, .5)",

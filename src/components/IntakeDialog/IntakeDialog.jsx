@@ -1,54 +1,69 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Button, Autocomplete, Container } from "@mui/material";
+import { Button, Autocomplete, Container, FormGroup } from "@mui/material";
 import { StyledTextField } from "../common/Inputs";
 import { DialogContainer, FormContainer } from "../common/Containers";
 import BackendClient from "../../client/BackendClient";
 import FoodDialog from "../FoodDialog/FoodDialog";
 import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 import AddIntakeValidator from "../../validators/AddIntakeValidator";
+import { INTAKE } from "../common/constants";
 
 // TODO: object is too big, refactor
 const IntakeDialog = (props) => {
   const { intakeId, showDialog, setShowDialog, refreshIntakes } = props;
   const isUpdate = useRef(intakeId ? true : false);
-  const [showAddFoodDialog, setShowAddFoodDialog] = useState(false);
+  const [showFoodDialog, setShowFoodDialog] = useState(false);
   const [food, setFood] = useState("");
   const [quantity, setQuantity] = useState("");
   const [error, setError] = useState("");
   const [foodOptions, setFoodOptions] = useState([]);
+  const [selectedFoodData, setSelectedFoodData] = useState(null);
 
   useEffect(() => {
-    setupDialog();
-  }, [setupDialog]);
-
-  const setupDialog = useCallback(async () => {
     getFoodOptionsData();
-    loadInputsWithIntakeData();
-  }, [getFoodOptionsData, loadInputsWithIntakeData]);
+  }, [getFoodOptionsData, isUpdate]);
 
-  const loadInputsWithIntakeData = useCallback(async () => {
-    if (isUpdate.current) {
-      const response = await BackendClient.getIntakeById(intakeId);
-
-      if (response) {
-        setFood(response.name);
-        setQuantity(response.quantity);
-      } else {
-        setError("Could not get intake. Try again later.");
-      }
+  useEffect(() => {
+    if (isUpdate.current && foodOptions.length > 0) {
+      loadInputsWithIntakeData();
     }
-  }, [setError, setFood, setQuantity, intakeId]);
+  }, [foodOptions, loadInputsWithIntakeData, isUpdate]);
 
   const getFoodOptionsData = useCallback(async () => {
     const foodOptionsData = await BackendClient.getFoodOptions();
     setFoodOptions(foodOptionsData);
   }, [setFoodOptions]);
 
+  const loadInputsWithIntakeData = useCallback(async () => {
+    const response = await BackendClient.getIntakeById(intakeId);
+
+    if (response) {
+      setFood(response.name);
+      setQuantity(response.quantity);
+      setSelectedFoodData(
+        foodOptions.find((option) => option.name === response.name)
+      );
+    } else {
+      setError("Could not get intake. Try again later.");
+    }
+  }, [
+    setError,
+    setFood,
+    setQuantity,
+    intakeId,
+    foodOptions,
+    setSelectedFoodData,
+    isUpdate,
+  ]);
+
   const foodChangeHandler = useCallback(
     (event, newValue) => {
       setFood(newValue);
+      setSelectedFoodData(
+        foodOptions.find((option) => option.name === newValue)
+      );
     },
-    [setFood]
+    [setFood, foodOptions, setSelectedFoodData]
   );
 
   const quantityChangeHandler = useCallback(
@@ -60,11 +75,10 @@ const IntakeDialog = (props) => {
 
   const addFoodCloseHandler = useCallback(() => {
     getFoodOptionsData();
-    setShowAddFoodDialog(false);
-  }, [setShowAddFoodDialog]);
+    setShowFoodDialog(false);
+  }, [setShowFoodDialog, getFoodOptionsData]);
 
   const submitHandler = useCallback(() => {
-    const selectedFoodData = foodOptions.find((option) => option.name === food);
     if (!selectedFoodData) {
       setError("Food is required");
       return;
@@ -79,7 +93,7 @@ const IntakeDialog = (props) => {
 
     if (isValid) {
       const result = isUpdate.current
-        ? BackendClient.updateIntake(formData)
+        ? BackendClient.update(INTAKE, formData)
         : BackendClient.addIntake(formData);
 
       if (!result) {
@@ -89,7 +103,16 @@ const IntakeDialog = (props) => {
         setShowDialog(false);
       }
     }
-  }, [food, quantity, setError, setShowDialog, refreshIntakes, intakeId]);
+  }, [
+    food,
+    quantity,
+    setError,
+    setShowDialog,
+    refreshIntakes,
+    intakeId,
+    foodOptions,
+    selectedFoodData,
+  ]);
 
   const submitOnEnter = useEnterButtonSubmit(submitHandler);
   return (
@@ -102,18 +125,21 @@ const IntakeDialog = (props) => {
         size={12}
         error={error}
         formFields={[
-          <Autocomplete
-            id="food"
-            value={food}
-            data-testid="food-input"
-            options={foodOptions.map((option) => option.name)}
-            sx={{ width: 300 }}
-            onChange={foodChangeHandler}
-            onKeyDown={submitOnEnter}
-            renderInput={(params) => (
-              <StyledTextField {...params} label="Food" />
-            )}
-          ></Autocomplete>,
+          <FormGroup>
+            <Autocomplete
+              id="food"
+              value={food}
+              data-testid="food-input"
+              options={foodOptions.map((option) => option.name)}
+              sx={{ width: 300 }}
+              onChange={foodChangeHandler}
+              onKeyDown={submitOnEnter}
+              renderInput={(params) => (
+                <StyledTextField {...params} label="Food" />
+              )}
+            ></Autocomplete>
+            <Button onClick={() => setShowFoodDialog(true)}>Edit</Button>
+          </FormGroup>,
           <StyledTextField
             id="quantity"
             label="Quantity"
@@ -141,7 +167,7 @@ const IntakeDialog = (props) => {
             : [
                 <Button
                   variant="outlined"
-                  onClick={() => setShowAddFoodDialog(true)}
+                  onClick={() => setShowFoodDialog(true)}
                   fullWidth
                 >
                   Add Food
@@ -159,10 +185,13 @@ const IntakeDialog = (props) => {
               ]
         }
       />
-      <FoodDialog
-        showDialog={showAddFoodDialog}
-        addFoodCloseHandler={addFoodCloseHandler}
-      ></FoodDialog>
+      {selectedFoodData && (
+        <FoodDialog
+          foodData={selectedFoodData}
+          showDialog={showFoodDialog}
+          addFoodCloseHandler={addFoodCloseHandler}
+        ></FoodDialog>
+      )}
     </DialogContainer>
   );
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import BackendClient from "../../src/client/BackendClient";
 import { useCallback } from "react";
+import { INTAKE } from "../../src/components/common/constants";
 
 jest.mock("axios");
 
@@ -268,16 +269,16 @@ describe("BackendClient", () => {
     });
   });
 
-  describe("updateIntake", () => {
+  describe("update", () => {
     it("should return response", async () => {
-      const expectedResponse = true
+      const expectedResponse = true;
       axios.patch.mockResolvedValue(expectedResponse);
 
-      const response = await BackendClient.updateIntake({
-        "name": "Plumber Juice"
+      const response = await BackendClient.update(INTAKE, {
+        name: "Plumber Juice",
       });
 
-      expect(response).toBe(expectedResponse)
+      expect(response).toBe(expectedResponse);
     });
 
     it("should return false if error", async () => {
@@ -285,13 +286,13 @@ describe("BackendClient", () => {
         throw Error("All of of plumbers juices");
       });
 
-      const response = await BackendClient.updateIntake({
-        "name": "Plumber Juice"
+      const response = await BackendClient.update(INTAKE, {
+        name: "Plumber Juice",
       });
 
       expect(response).toBe(false);
     });
-  })
+  });
 
   describe("deleteIntake", () => {
     it("should return true if intake successfully deleted", async () => {
@@ -393,6 +394,26 @@ describe("BackendClient", () => {
       await new Promise((res) => setTimeout(res, 10));
 
       expect(options).toEqual([]);
+    });
+  });
+
+  describe("getFoodById", () => {
+    it("should return data", async () => {
+      axios.get.mockReturnValue({ data: { _id: "id", name: "name" } });
+
+      const result = await BackendClient.getFoodById("foodId");
+
+      expect(result).toEqual({ _id: "id", name: "name" });
+    });
+
+    it("should return false if error", async () => {
+      axios.get.mockImplementation(() => {
+        throw new Error("ahhhhh goooood");
+      });
+
+      const result = await BackendClient.getFoodById("foodId");
+
+      expect(result).toEqual(false);
     });
   });
 

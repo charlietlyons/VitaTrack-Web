@@ -1,5 +1,5 @@
 import useEnterButtonSubmit from "../../src/hooks/useEnterButtonSubmit";
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react";
 
 describe("useEnterButtonSubmit", () => {
   it("should call submitHandler if keyCode is 13", () => {

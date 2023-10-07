@@ -5,7 +5,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-// TODO: convert to class/hook? and use async/await instead
+// TODO: convert to class/hook and use async/await instead
 const BackendClient = {
   login: async (email, password, errorSetter) => {
     try {
@@ -122,18 +122,14 @@ const BackendClient = {
     }
   },
 
-  async updateIntake(formData) {
+  async update(endpoint, formData) {
     try {
-      const response = await axios.patch(
-        `${url}/intake`,
-        formData,
-        {
-          headers: {
-            ...headers,
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios.patch(`${url}/${endpoint}?`, formData, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       return response;
     } catch (error) {
@@ -168,6 +164,21 @@ const BackendClient = {
       return response.data;
     } catch (err) {
       return [];
+    }
+  },
+
+  async getFoodById(foodId) {
+    try {
+      const response = await axios.get(`${url}/food/${foodId}`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      return response.data;
+    } catch (err) {
+      return false;
     }
   },
 

@@ -1,4 +1,10 @@
-import React, { useState, useReducer, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useReducer,
+  useCallback,
+  useEffect,
+} from "react";
 import { DialogContainer, FormContainer } from "../common/Containers";
 import { Button } from "@mui/material";
 import { StyledTextField } from "../common/Inputs";
@@ -15,6 +21,8 @@ import {
   ACCESS,
   DESCRIPTION,
   IMAGE_URL,
+  UPDATE,
+  FOOD,
 } from "../common/constants";
 import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 import BackendClient from "../../client/BackendClient";
@@ -24,7 +32,7 @@ const FoodDialog = (props) => {
   const [state, dispatch] = useReducer(FoodDialogReducer, {
     name: "",
     servingSize: "",
-    servingMetric: "",
+    servingUnit: "",
     calories: "",
     protein: "",
     carbs: "",
@@ -33,22 +41,55 @@ const FoodDialog = (props) => {
     description: "",
     imageUrl: "",
   });
-  const { showDialog, addFoodCloseHandler } = props;
+  const { showDialog, addFoodCloseHandler, foodData } = props;
+  const isUpdate = useRef(foodData ? true : false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    loadExistingFoodData();
+  }, [loadExistingFoodData]);
+
+  const loadExistingFoodData = useCallback(async () => {
+    if (isUpdate.current) {
+      dispatch({
+        type: UPDATE,
+        payload: foodData,
+      });
+    }
+  }, [dispatch, foodData, isUpdate]);
+
+  const addHandler = useCallback(() => {
+    BackendClient.addFood(
+      state,
+      () => {
+        addFoodCloseHandler();
+      },
+      (err) => {
+        setError("Something went wrong: ", err);
+      }
+    );
+  }, [addFoodCloseHandler, setError, state]);
+
+  const updateHandler = useCallback(async () => {
+    const response = BackendClient.update(FOOD, state);
+
+    if (response) {
+      addFoodCloseHandler();
+    } else {
+      setError("Something went wrong.");
+    }
+  }, [state, setError, addFoodCloseHandler]);
+
   const submitHandler = useCallback(() => {
     if (AddFoodValidator.validate(state, setError)) {
       setError("");
-      BackendClient.addFood(
-        state,
-        () => {
-          addFoodCloseHandler();
-        },
-        (err) => {
-          setError("Something went wrong: ", err);
-        }
-      );
+      if (isUpdate.current) {
+        updateHandler();
+      } else {
+        addHandler();
+      }
     }
-  }, [addFoodCloseHandler, state, setError]);
+  }, [state, setError, updateHandler, addHandler]);
 
   const changeHandler = useReducerChangeHandler(dispatch);
   const submitOnEnter = useEnterButtonSubmit(submitHandler);
@@ -75,7 +116,7 @@ const FoodDialog = (props) => {
           <StyledTextField
             id={SERVING_METRIC}
             label="Serving Metric"
-            value={state.servingMetric}
+            value={state.servingUnit}
             // type="number"
             onChange={changeHandler}
             onKeyDown={submitOnEnter}
@@ -139,13 +180,9 @@ const FoodDialog = (props) => {
         ]}
         buttons={[
           <Button variant="contained" onClick={submitHandler} fullWidth>
-            Add
+            {isUpdate.current ? "Update" : "Add"}
           </Button>,
-          <Button
-            variant="outlined"
-            onClick={addFoodCloseHandler}
-            fullWidth
-          >
+          <Button variant="outlined" onClick={addFoodCloseHandler} fullWidth>
             Close
           </Button>,
         ]}

@@ -5,7 +5,7 @@ describe("FoodDialogReducer", () => {
   const initialState = {
     name: "",
     servingSize: "",
-    servingMetric: "",
+    servingUnit: "",
     calories: "",
     protein: "",
     carbs: "",
@@ -24,7 +24,7 @@ describe("FoodDialogReducer", () => {
     ).toEqual({
       name: "",
       servingSize: "",
-      servingMetric: "",
+      servingUnit: "",
       calories: "",
       protein: "test",
       carbs: "",

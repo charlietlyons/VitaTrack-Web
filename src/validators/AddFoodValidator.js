@@ -6,7 +6,7 @@ const AddFoodValidator = {
       return setErrorAndReturnFalse("Name is required", setError);
     } else if (state.servingSize === "") {
       return setErrorAndReturnFalse("Serving Size is required", setError);
-    } else if (state.servingMetric === "") {
+    } else if (state.servingUnit === "") {
       return setErrorAndReturnFalse("Serving Metric is required", setError);
     } else if (state.calories === "") {
       return setErrorAndReturnFalse("Calories is required", setError);

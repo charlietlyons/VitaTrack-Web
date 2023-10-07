@@ -88,6 +88,10 @@ function handleAddFood(req, res) {
   res.status(200).send();
 }
 
+function handlePatchFood(req, res) {
+  res.status(200).send();
+}
+
 function handleGetFoodOptions(req, res) {
   const foodRecords = router.db.get("food");
 
@@ -109,6 +113,7 @@ server.post("/intake", handleAddIntake);
 server.delete("/intake/:id", handleDeleteIntake);
 server.get("/food", handleGetFoodOptions);
 server.post("/food", handleAddFood);
+server.patch("/food", handlePatchFood);
 
 server.use(router);
 

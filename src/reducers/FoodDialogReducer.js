@@ -9,10 +9,13 @@ import {
   ACCESS,
   DESCRIPTION,
   IMAGE_URL,
+  UPDATE,
 } from "../components/common/constants";
 
 const FoodDialogReducer = (prev, action) => {
   switch (action.type) {
+    case UPDATE:
+      return action.payload;
     case FOOD_NAME:
       return {
         ...prev,
@@ -26,13 +29,13 @@ const FoodDialogReducer = (prev, action) => {
     case SERVING_METRIC:
       return {
         ...prev,
-        servingMetric: action.payload,
+        servingUnit: action.payload,
       };
     case CALORIES:
       return {
         ...prev,
         calories: action.payload,
-      };  
+      };
     case PROTEIN:
       return {
         ...prev,
