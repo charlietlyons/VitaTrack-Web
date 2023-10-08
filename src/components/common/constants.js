@@ -8,6 +8,7 @@ export const PHONE = "phone";
 
 // Food Dialog Form Reducer Constants
 export const UPDATE = "updatefood";
+export const CLEAR = "clearfood";
 export const FOOD_NAME = "foodname";
 export const SERVING_SIZE = "servingsize";
 export const SERVING_METRIC = "servingmetric";

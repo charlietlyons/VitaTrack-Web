@@ -185,7 +185,7 @@ const IntakeDialog = (props) => {
               ]
         }
       />
-      {selectedFoodData && (
+      {showFoodDialog && (
         <FoodDialog
           foodData={selectedFoodData}
           showDialog={showFoodDialog}

@@ -23,6 +23,7 @@ import {
   IMAGE_URL,
   UPDATE,
   FOOD,
+  CLEAR,
 } from "../common/constants";
 import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 import BackendClient from "../../client/BackendClient";
@@ -62,6 +63,10 @@ const FoodDialog = (props) => {
     BackendClient.addFood(
       state,
       () => {
+        dispatch({
+          type: CLEAR,
+          payload: {},
+        });
         addFoodCloseHandler();
       },
       (err) => {
@@ -74,6 +79,10 @@ const FoodDialog = (props) => {
     const response = BackendClient.update(FOOD, state);
 
     if (response) {
+      dispatch({
+        type: CLEAR,
+        payload: {},
+      });
       addFoodCloseHandler();
     } else {
       setError("Something went wrong.");

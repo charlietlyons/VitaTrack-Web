@@ -10,10 +10,24 @@ import {
   DESCRIPTION,
   IMAGE_URL,
   UPDATE,
+  CLEAR,
 } from "../components/common/constants";
 
 const FoodDialogReducer = (prev, action) => {
   switch (action.type) {
+    case CLEAR:
+      return {
+        name: "",
+        servingSize: "",
+        servingUnit: "",
+        calories: "",
+        protein: "",
+        carbs: "",
+        fat: "",
+        access: "",
+        description: "",
+        imageUrl: "",
+      };
     case UPDATE:
       return action.payload;
     case FOOD_NAME:

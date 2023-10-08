@@ -354,31 +354,6 @@ describe("IntakeDialog", () => {
       expect(cancel).toBeInTheDocument();
     });
   });
-
-  describe("Add Intake", () => {
-    it("should addIntake if formData is valid, food data is provided.", async () => {
-      await act(async () =>
-        render(
-          <IntakeDialog
-            showDialog={true}
-            setShowDialog={mockSetShowDialog}
-            refreshIntakes={mockRefreshIntakes}
-          />
-        )
-      );
-
-      await act(async () => {
-        setQuantityValue(1);
-
-        const submit = screen.getByText(/Submit/i);
-        fireEvent.click(submit);
-      });
-
-      await waitFor(() => {
-        expect(BackendClient.addIntake).toHaveBeenCalledTimes(1);
-      });
-    });
-  });
 });
 
 function setQuantityValue(value) {

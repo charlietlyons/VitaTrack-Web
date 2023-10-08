@@ -25,8 +25,10 @@ const DailyStats = () => {
   }, [setIntakes, setError]);
 
   useEffect(() => {
-    refreshIntakes();
-  }, [refreshIntakes]);
+    if (isLoggedIn) {
+      refreshIntakes();
+    }
+  }, [refreshIntakes, isLoggedIn]);
 
   return isLoggedIn ? (
     <PageContainer>
