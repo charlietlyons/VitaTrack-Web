@@ -6,7 +6,7 @@ import BackendClient from "../../client/BackendClient";
 import FoodDialog from "../FoodDialog/FoodDialog";
 import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
 import AddIntakeValidator from "../../validators/AddIntakeValidator";
-import { INTAKE } from "../common/constants";
+import { FOOD, INTAKE } from "../common/constants";
 
 // TODO: object is too big, refactor
 const IntakeDialog = (props) => {
@@ -78,6 +78,21 @@ const IntakeDialog = (props) => {
     setShowFoodDialog(false);
   }, [setShowFoodDialog, getFoodOptionsData]);
 
+  const deleteFoodHandler = useCallback(async () => {
+    if (selectedFoodData) {
+      const response = await BackendClient.delete(FOOD, selectedFoodData._id);
+
+      if (response) {
+        setFood("");
+        setSelectedFoodData(null);
+      } else {
+        setError("Could not delete food. Try again later.");
+      }
+    } else {
+      setError("Food is required");
+    }
+  }, [selectedFoodData, setError, setFood, setSelectedFoodData]);
+
   const submitHandler = useCallback(() => {
     if (!selectedFoodData) {
       setError("Food is required");
@@ -139,6 +154,7 @@ const IntakeDialog = (props) => {
               )}
             ></Autocomplete>
             <Button onClick={() => setShowFoodDialog(true)}>Edit</Button>
+            <Button onClick={() => deleteFoodHandler()}>Delete</Button>
           </FormGroup>,
           <StyledTextField
             id="quantity"

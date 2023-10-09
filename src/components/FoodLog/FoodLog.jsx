@@ -7,9 +7,8 @@ import {
   TableRow,
 } from "@mui/material";
 import BackendClient from "../../client/BackendClient";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import IntakeDialog from "../IntakeDialog/IntakeDialog";
+import Intake from "../Intake";
 
 const FoodLog = (props) => {
   const { intakes, error, setError, refreshIntakes } = props;
@@ -62,24 +61,12 @@ const FoodLog = (props) => {
           {intakes.length > 0 &&
             intakes.map((intake, index) => {
               return (
-                <TableRow key={index} data-testid={`intake-${index}`}>
-                  <TableCell>{intake.name}</TableCell>
-                  <TableCell>{intake.quantity}</TableCell>
-                  <TableCell>{intake.calories}</TableCell>
-                  <TableCell>{intake.protein}</TableCell>
-                  <TableCell>{intake.carbs}</TableCell>
-                  <TableCell>{intake.fat}</TableCell>
-                  <TableCell>
-                    <EditOutlinedIcon
-                      data-testid={`intake-edit-${index}`}
-                      onClick={() => editIntake(intake._id)}
-                    />
-                    <CloseOutlinedIcon
-                      data-testid={`intake-delete-${index}`}
-                      onClick={() => deleteIntake(intake._id)}
-                    />
-                  </TableCell>
-                </TableRow>
+                <Intake
+                  index={index}
+                  deleteIntake={deleteIntake}
+                  editIntake={editIntake}
+                  {...intake}
+                />
               );
             })}
         </TableBody>

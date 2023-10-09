@@ -294,11 +294,11 @@ describe("BackendClient", () => {
     });
   });
 
-  describe("deleteIntake", () => {
-    it("should return true if intake successfully deleted", async () => {
+  describe("delete", () => {
+    it("should return true if successfully deleted", async () => {
       axios.delete.mockResolvedValue(true);
 
-      const result = await BackendClient.deleteIntake("intakeId");
+      const result = await BackendClient.delete(INTAKE, "intakeId");
 
       expect(result).toBe(true);
     });
@@ -306,7 +306,7 @@ describe("BackendClient", () => {
     it("should return false if intake successfully deleted", async () => {
       axios.delete.mockResolvedValue(false);
 
-      const result = await BackendClient.deleteIntake("intakeId");
+      const result = await BackendClient.delete(INTAKE, "intakeId");
 
       expect(result).toBe(false);
     });
@@ -316,7 +316,7 @@ describe("BackendClient", () => {
         throw Error("hatred");
       });
 
-      const result = await BackendClient.deleteIntake("intakeId");
+      const result = await BackendClient.delete(INTAKE, "intakeId");
 
       expect(result).toBe(false);
     });

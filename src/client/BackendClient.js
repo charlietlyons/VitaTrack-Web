@@ -137,9 +137,9 @@ const BackendClient = {
     }
   },
 
-  async deleteIntake(intakeId) {
+  async delete(endpoint, id) {
     try {
-      const response = await axios.delete(`${url}/intake/${intakeId}`, {
+      const response = await axios.delete(`${url}/${endpoint}/${id}`, {
         headers: {
           ...headers,
           Authorization: `Bearer ${localStorage.getItem("token")}`,
