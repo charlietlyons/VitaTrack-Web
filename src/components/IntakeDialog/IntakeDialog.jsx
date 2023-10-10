@@ -93,7 +93,7 @@ const IntakeDialog = (props) => {
     }
   }, [selectedFoodData, setError, setFood, setSelectedFoodData]);
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     if (!selectedFoodData) {
       setError("Food is required");
       return;
@@ -108,8 +108,8 @@ const IntakeDialog = (props) => {
 
     if (isValid) {
       const result = isUpdate.current
-        ? BackendClient.update(INTAKE, formData)
-        : BackendClient.addIntake(formData);
+        ? await BackendClient.update(INTAKE, formData)
+        : await BackendClient.addIntake(formData);
 
       if (!result) {
         setError("Could not submit intake. Try again later.");

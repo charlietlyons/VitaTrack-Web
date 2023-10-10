@@ -4,7 +4,6 @@ import "@testing-library/jest-dom";
 import FoodLog from "../../src/components/FoodLog/FoodLog";
 import userEvent from "@testing-library/user-event";
 import BackendClient from "../../src/client/BackendClient";
-import { IsoTwoTone } from "@mui/icons-material";
 
 describe("FoodLog", () => {
   let refreshIntakesMock, setErrorMock;
@@ -53,8 +52,8 @@ describe("FoodLog", () => {
   });
 
   it("should remove intake when delete is successful", async () => {
-    const deleteIntakeMock = jest.fn().mockReturnValue(true);
-    BackendClient.deleteIntake = deleteIntakeMock;
+    const deleteMock = jest.fn().mockReturnValue(true);
+    BackendClient.delete = deleteMock;
 
     render(
       <FoodLog
@@ -77,13 +76,13 @@ describe("FoodLog", () => {
     const deleteButton = await screen.findByTestId("intake-delete-0");
     await userEvent.click(deleteButton);
 
-    expect(deleteIntakeMock).toHaveBeenCalled();
+    expect(deleteMock).toHaveBeenCalled();
     expect(setErrorMock).not.toHaveBeenCalled();
   });
 
   it("should set error when delete is unsuccessful", async () => {
-    const deleteIntakeMock = jest.fn().mockReturnValue(false);
-    BackendClient.deleteIntake = deleteIntakeMock;
+    const deleteMock = jest.fn().mockReturnValue(false);
+    BackendClient.delete = deleteMock;
 
     render(
       <FoodLog
@@ -106,7 +105,7 @@ describe("FoodLog", () => {
     const deleteButton = await screen.findByTestId("intake-delete-0");
     await userEvent.click(deleteButton);
 
-    expect(deleteIntakeMock).toHaveBeenCalled();
+    expect(deleteMock).toHaveBeenCalled();
     expect(setErrorMock).toHaveBeenCalled();
   });
 

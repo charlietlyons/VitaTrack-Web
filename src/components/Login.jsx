@@ -6,6 +6,7 @@ import { StyledTextField } from "./common/Inputs";
 import { FormContainer } from "./common/Containers";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { TOKEN } from "./common/constants";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,6 +41,17 @@ const Login = () => {
     },
     [password, setPassword]
   );
+
+  const checkToken = useCallback(async () => {
+    const response = await BackendClient.post(TOKEN, {});
+    if (response && response.status === 200) {
+      setIsLoggedIn(true);
+    }
+  }, [setIsLoggedIn]);
+
+  useEffect(() => {
+    checkToken();
+  }, [checkToken]);
 
   return (
     <>

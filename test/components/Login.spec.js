@@ -96,6 +96,8 @@ describe("Login", () => {
   describe("isLoggedIn is true", () => {
     beforeEach(() => {
       jest.resetAllMocks();
+    });
+    it("should navigate to daily log when isLoggedIn", async () => {
       render(
         <BrowserRouter>
           <MockAuthContextProvider isLoggedIn={true}>
@@ -103,14 +105,31 @@ describe("Login", () => {
           </MockAuthContextProvider>
         </BrowserRouter>
       );
-    });
-    it("should navigate to daily log when isLoggedIn", async () => {
+
       const emailInputElement = screen.queryByLabelText("Email Address");
       const passwordInputElement = screen.queryByLabelText("Password");
 
       expect(window.location.pathname).toBe("/vitatrack/daily");
       expect(emailInputElement).not.toBeInTheDocument();
       expect(passwordInputElement).not.toBeInTheDocument();
+    });
+
+    it("should set is logged in to true if verify token is successful", () => {
+      BackendClient.post = jest.fn().mockImplementationOnce(() =>
+        Promise.resolve({
+          status: 200,
+        })
+      );
+
+      render(
+        <BrowserRouter>
+          <MockAuthContextProvider isLoggedIn={false}>
+            <Login />
+          </MockAuthContextProvider>
+        </BrowserRouter>
+      );
+
+      expect(window.location.pathname).toBe("/vitatrack/daily");
     });
   });
 });

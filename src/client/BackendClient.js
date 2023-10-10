@@ -202,22 +202,18 @@ const BackendClient = {
     }
   },
 
-  verifyToken: async (token, callback) => {
+  post: async (endpoint, formData) => {
     try {
-      const response = await axios.post(
-        `${url}/verify-token`,
-        { token: token },
-        {
-          headers: headers,
-        }
-      );
-      if (response && response.status === 200) {
-        callback(true);
-      } else {
-        callback(false);
-      }
+      const response = await axios.post(`${url}/${endpoint}`, formData, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      return response;
     } catch (error) {
-      callback(false);
+      return false;
     }
   },
 };

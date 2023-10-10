@@ -19,12 +19,12 @@ function handleLogin(req, res) {
 }
 
 function handleTokenVerification(req, res) {
-  const { token } = req.body;
+  const token = req.headers.authorization.split(" ")[1];
 
   if (token === "someToken") {
-    res.status(200);
+    res.status(200).send();
   } else {
-    res.status(401);
+    res.status(401).send();
   }
 }
 

@@ -9,6 +9,7 @@ import {
 import BackendClient from "../../client/BackendClient";
 import IntakeDialog from "../IntakeDialog/IntakeDialog";
 import Intake from "../Intake";
+import { INTAKE } from "../common/constants";
 
 const FoodLog = (props) => {
   const { intakes, error, setError, refreshIntakes } = props;
@@ -20,13 +21,13 @@ const FoodLog = (props) => {
     async (intakeId) => {
       setSelectedIntakeId(intakeId);
       setShowEditDialog(true);
-    },
+  },
     [setShowEditDialog, setSelectedIntakeId]
   );
 
   const deleteIntake = useCallback(
     async (intakeId) => {
-      const result = await BackendClient.deleteIntake(intakeId);
+      const result = await BackendClient.delete(INTAKE, intakeId);
       if (!result) {
         setError("Could not delete intake. Try again later.");
       }

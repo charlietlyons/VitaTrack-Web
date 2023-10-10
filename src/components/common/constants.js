@@ -24,5 +24,6 @@ export const IMAGE_URL = "imageurl";
 export const LOGIN = "login";
 export const REGISTER = "register";
 export const ACCOUNT_DETAILS = "account-details";
+export const TOKEN = "verify-token";
 export const FOOD = "food";
 export const INTAKE = "intake";

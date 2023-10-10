@@ -1,8 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-} from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import DailyStats from "../../src/components/DailyStats";
 import React from "react";
@@ -49,9 +45,13 @@ describe("DailyStats", () => {
 
     const foodInput = screen.getByLabelText(/Food/i);
     expect(foodInput).toBeInTheDocument();
-  });
+});
 
   it("should set intakes on page load", async () => {
+    axios.post.mockReturnValue({
+      status: 200,
+    });
+
     axios.get.mockImplementation(() =>
       Promise.resolve({
         data: [
@@ -77,5 +77,5 @@ describe("DailyStats", () => {
 
     const intakeElement = await screen.findByTestId("intake-0");
     expect(intakeElement).toBeInTheDocument();
-  })
+  });
 });

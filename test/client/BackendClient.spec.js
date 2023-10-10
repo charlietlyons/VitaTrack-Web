@@ -1,7 +1,7 @@
 import axios from "axios";
 import BackendClient from "../../src/client/BackendClient";
 import { useCallback } from "react";
-import { INTAKE } from "../../src/components/common/constants";
+import { INTAKE, TOKEN } from "../../src/components/common/constants";
 
 jest.mock("axios");
 
@@ -417,40 +417,37 @@ describe("BackendClient", () => {
     });
   });
 
-  describe("verifyToken", () => {
+  describe("post", () => {
     it("should call callback with true if response is 200", async () => {
-      const callbackMock = jest.fn();
       const response = { status: 200 };
 
       axios.post.mockResolvedValue(response);
 
-      await BackendClient.verifyToken("token", callbackMock);
+      const actual = await BackendClient.post(TOKEN, {});
 
-      expect(callbackMock).toHaveBeenCalledWith(true);
+      expect(actual).toEqual(response);
     });
 
     it("should call callback with false if response is not 200", async () => {
-      const callbackMock = jest.fn();
       const response = { status: 401 };
 
       axios.post.mockResolvedValue(response);
 
-      await BackendClient.verifyToken("token", callbackMock);
+      const actual = await BackendClient.post(TOKEN, {});
 
-      expect(callbackMock).toHaveBeenCalledWith(false);
+      expect(actual).toEqual(response);
     });
 
     it("should call callback with false if error", async () => {
-      const callbackMock = jest.fn();
       const error = new Error("bad time.com");
 
       axios.post.mockImplementation(() => {
         throw error;
       });
 
-      await BackendClient.verifyToken("token", callbackMock);
+      const actual = await BackendClient.post(TOKEN, {});
 
-      expect(callbackMock).toHaveBeenCalledWith(false);
+      expect(actual).toEqual(false);
     });
   });
 });
