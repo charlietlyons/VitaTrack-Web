@@ -7,11 +7,15 @@ import { FormContainer } from "./common/Containers";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { TOKEN } from "./common/constants";
+import ForgotPasswordDialog from "./dialogs/ForgotPasswordDialog/ForgotPasswordDialog";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const [showForgotPasswordDialog, setShowForgotPasswordDialog] =
+    useState(false);
 
   const authContext = useContext(AuthContext);
   const { isLoggedIn, setIsLoggedIn } = authContext;
@@ -55,6 +59,12 @@ const Login = () => {
 
   return (
     <>
+      {showForgotPasswordDialog && (
+        <ForgotPasswordDialog
+          showDialog={showForgotPasswordDialog}
+          setShowDialog={setShowForgotPasswordDialog}
+        />
+      )}
       {!isLoggedIn ? (
         <FormContainer
           title={!isLoggedIn && <Heading1>Login</Heading1>}
@@ -79,6 +89,10 @@ const Login = () => {
             </Button>,
           ]}
           error={error}
+          footerLink={{
+            text: "Forgot Password?",
+            onClick: () => setShowForgotPasswordDialog(true),
+          }}
         />
       ) : (
         <Navigate to="/vitatrack/daily" />

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom";
 import { MockAuthContextProvider } from "../context/MockAuthContext";
+import { act } from "react-dom/test-utils";
 
 describe("AccountDetails", () => {
   it("should show login screen when not loggedIn", () => {
@@ -24,8 +25,30 @@ describe("AccountDetails", () => {
       </MockAuthContextProvider>
     );
 
-    const detailsElement = screen.getByRole("heading", { level: 1 });
+    const detailsElement = screen.getByRole("heading", { level: 3 });
 
     expect(detailsElement).toHaveTextContent("Account Details");
+  });
+
+  it("should show update password dialog when change password button is clicked", async () => {
+    await act(async () => {
+      render(
+        <MockAuthContextProvider isLoggedIn={true}>
+          <AccountDetails />
+        </MockAuthContextProvider>
+      );
+    });
+
+    const updatePasswordButton = screen.getByRole("button", {
+      name: "Change Password",
+    });
+
+    updatePasswordButton.click();
+
+    const updatePasswordHeading = await screen.findByText(
+      /Enter your new password/i
+    );
+
+    expect(updatePasswordHeading).toBeInTheDocument();
   });
 });

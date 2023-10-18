@@ -1,8 +1,7 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import FoodLog from "../../src/components/FoodLog/FoodLog";
-import userEvent from "@testing-library/user-event";
 import BackendClient from "../../src/client/BackendClient";
 
 describe("FoodLog", () => {
@@ -74,7 +73,7 @@ describe("FoodLog", () => {
     );
 
     const deleteButton = await screen.findByTestId("intake-delete-0");
-    await userEvent.click(deleteButton);
+    await fireEvent.click(deleteButton);
 
     expect(deleteMock).toHaveBeenCalled();
     expect(setErrorMock).not.toHaveBeenCalled();
@@ -103,7 +102,7 @@ describe("FoodLog", () => {
     );
 
     const deleteButton = await screen.findByTestId("intake-delete-0");
-    await userEvent.click(deleteButton);
+    await fireEvent.click(deleteButton);
 
     expect(deleteMock).toHaveBeenCalled();
     expect(setErrorMock).toHaveBeenCalled();
@@ -130,7 +129,7 @@ describe("FoodLog", () => {
     );
 
     const editButton = await screen.findByTestId("intake-edit-0");
-    await userEvent.click(editButton);
+    await fireEvent.click(editButton);
 
     const updateDialog = await screen.findByTestId("food-input");
     expect(updateDialog).toBeInTheDocument();

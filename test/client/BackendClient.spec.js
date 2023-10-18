@@ -156,6 +156,64 @@ describe("BackendClient", () => {
     });
   });
 
+  describe("sendForgotPasswordEmail", () => {
+    it("should return true if response exists", async () => {
+      const expectedResponse = { status: 200 };
+      axios.post.mockResolvedValue(expectedResponse);
+
+      const response = await BackendClient.sendForgotPasswordEmail("email");
+
+      expect(response).toEqual(true);
+    });
+
+    it("should return false if error", async () => {
+      axios.post.mockImplementation(() => {
+        throw Error("error");
+      });
+
+      const response = await BackendClient.sendForgotPasswordEmail("email");
+
+      expect(response).toEqual(false);
+    });
+
+    it("should return false if response is not 200", async () => {
+      axios.post.mockResolvedValue({ status: 401 });
+
+      const response = await BackendClient.sendForgotPasswordEmail("email");
+
+      expect(response).toEqual(false);
+    });
+  });
+
+  describe("updatePassword", () => {
+    it("should return true if response exists", async () => {
+      const expectedResponse = { status: 200 };
+      axios.post.mockResolvedValue(expectedResponse);
+
+      const response = await BackendClient.updatePassword("password");
+
+      expect(response).toEqual(true);
+    });
+
+    it("should return false if error", async () => {
+      axios.post.mockImplementation(() => {
+        throw Error("error");
+      });
+
+      const response = await BackendClient.updatePassword("password");
+
+      expect(response).toEqual(false);
+    });
+
+    it("should return false if response is not 200", async () => {
+      axios.post.mockResolvedValue({ status: 401 });
+
+      const response = await BackendClient.updatePassword("password");
+
+      expect(response).toEqual(false);
+    });
+  });
+
   describe("addIntake", () => {
     it("should call successHandler if response exists", async () => {
       const mockSuccessHandler = jest.fn();

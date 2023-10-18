@@ -1,7 +1,7 @@
 import { render, within } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import { act } from "react-dom/test-utils";
-import IntakeDialog from "../../src/components/IntakeDialog/IntakeDialog";
+import IntakeDialog from "../../src/components/dialogs/IntakeDialog/IntakeDialog";
 import React from "react";
 import { fireEvent, waitFor } from "@testing-library/dom";
 import BackendClient from "../../src/client/BackendClient";

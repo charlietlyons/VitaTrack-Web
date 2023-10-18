@@ -6,6 +6,7 @@ const headers = {
 };
 
 // TODO: convert to class/hook and use async/await instead
+// TODO: Divide into smaller clients based on their domain
 const BackendClient = {
   login: async (email, password, errorSetter) => {
     try {
@@ -63,6 +64,51 @@ const BackendClient = {
         });
     } catch (error) {
       failureHandler(error);
+    }
+  },
+
+  async sendForgotPasswordEmail(email) {
+    try {
+      const response = await axios.post(
+        `${url}/forgot-password`,
+        {
+          email: email,
+        },
+        {
+          headers: headers,
+        }
+      );
+
+      if (response.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  },
+
+  async updatePassword(newPassword) {
+    try {
+      const response = await axios.post(
+        `${url}/update-password`,
+        {
+          password: newPassword,
+        },
+        {
+          headers: {
+            ...headers,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
     }
   },
 

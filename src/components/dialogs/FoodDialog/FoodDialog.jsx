@@ -5,11 +5,11 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { DialogContainer, FormContainer } from "../common/Containers";
+import { DialogContainer, FormContainer } from "../../common/Containers";
 import { Button } from "@mui/material";
-import { StyledTextField } from "../common/Inputs";
-import FoodDialogReducer from "../../reducers/FoodDialogReducer";
-import useReducerChangeHandler from "../../hooks/useReducerChangeHandler";
+import { StyledTextField } from "../../common/Inputs";
+import FoodDialogReducer from "../../../reducers/FoodDialogReducer";
+import useReducerChangeHandler from "../../../hooks/useReducerChangeHandler";
 import {
   FOOD_NAME,
   SERVING_SIZE,
@@ -24,10 +24,10 @@ import {
   UPDATE,
   FOOD,
   CLEAR,
-} from "../common/constants";
-import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
-import BackendClient from "../../client/BackendClient";
-import AddFoodValidator from "../../validators/AddFoodValidator";
+} from "../../common/constants";
+import useEnterButtonSubmit from "../../../hooks/useEnterButtonSubmit";
+import BackendClient from "../../../client/BackendClient";
+import AddFoodValidator from "../../../validators/AddFoodValidator";
 
 const FoodDialog = (props) => {
   const [state, dispatch] = useReducer(FoodDialogReducer, {

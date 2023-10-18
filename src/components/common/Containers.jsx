@@ -6,6 +6,8 @@ import {
   CardHeader,
   Dialog,
   DialogTitle,
+  Link,
+  DialogContentText,
 } from "@mui/material";
 import styled from "styled-components";
 import React from "react";
@@ -30,7 +32,7 @@ export const PageContainer = (props) => {
 };
 
 export const FormContainer = (props) => {
-  const { title, size, formFields, buttons, error } = props;
+  const { title, size, formFields, buttons, error, footerLink } = props;
 
   return (
     <Grid container justifyContent="center" alignItems="center">
@@ -56,6 +58,9 @@ export const FormContainer = (props) => {
             })}
 
             {error && <output data-testid="form-error">{error}</output>}
+            {footerLink && (
+              <Link onClick={footerLink.onClick}>{footerLink.text}</Link>
+            )}
           </CardContent>
         </Card>
       </Grid>
@@ -64,7 +69,7 @@ export const FormContainer = (props) => {
 };
 
 export const DialogContainer = (props) => {
-  const { title, size, showDialog, children } = props;
+  const { title, subtitle, size, showDialog, children } = props;
 
   return (
     <Dialog
@@ -76,6 +81,7 @@ export const DialogContainer = (props) => {
       }}
     >
       <DialogTitle>{title}</DialogTitle>
+      <DialogContentText>{subtitle}</DialogContentText>
       {children}
     </Dialog>
   );
