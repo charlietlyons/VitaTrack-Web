@@ -72,24 +72,12 @@ async function handleGetIntakeById(req, res) {
   res.json(firstIntake);
 }
 
-function handlePatchIntake(req, res) {
-  res.status(200).send();
-}
-
-function handleAddIntake(req, res) {
+function handle200(req, res) {
   res.status(200).send();
 }
 
 function handleDeleteIntake(req, res) {
   res.status(200).send(true);
-}
-
-function handleAddFood(req, res) {
-  res.status(200).send();
-}
-
-function handlePatchFood(req, res) {
-  res.status(200).send();
 }
 
 function handleGetFoodOptions(req, res) {
@@ -102,18 +90,25 @@ function handleGetFoodOptions(req, res) {
   }
 }
 
+// USER
 server.get("/account-details", handleAccountDetails);
 server.post("/register-user", handleRegistration);
 server.post("/verify-user", handleLogin);
 server.post("/verify-token", handleTokenVerification);
+server.post("/forgot-password", handle200);
+server.post("/update-password", handle200);
+
+// INTAKE
 server.get("/intake", handleGetIntakes);
 server.get("/intake/:id", handleGetIntakeById);
-server.patch("/intake/:id", handlePatchIntake);
-server.post("/intake", handleAddIntake);
+server.patch("/intake/:id", handle200);
+server.post("/intake", handle200);
 server.delete("/intake/:id", handleDeleteIntake);
+
+// FOOD
 server.get("/food", handleGetFoodOptions);
-server.post("/food", handleAddFood);
-server.patch("/food", handlePatchFood);
+server.post("/food", handle200);
+server.patch("/food", handle200);
 
 server.use(router);
 

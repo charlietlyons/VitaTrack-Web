@@ -2,7 +2,7 @@ import { act } from "react-dom/test-utils";
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom";
-import FoodDialog from "../../src/components/FoodDialog/FoodDialog";
+import FoodDialog from "../../src/components/dialogs/FoodDialog/FoodDialog";
 import BackendClient from "../../src/client/BackendClient";
 import AddFoodValidator from "../../src/validators/AddFoodValidator";
 import { FOOD } from "../../src/components/common/constants";

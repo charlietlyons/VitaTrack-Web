@@ -3,10 +3,15 @@ import BackendClient from "../client/BackendClient";
 import { PageContainer } from "./common/Containers";
 import { AuthContext } from "../context/AuthContext";
 import Login from "./Login";
+import UpdatePasswordDialog from "./dialogs/UpdatePasswordDialog/UpdatePasswordDialog";
+import { Button, Typography } from "@mui/material";
 
 const AccountDetails = () => {
   const { isLoggedIn } = useContext(AuthContext);
+
   const [accountDetails, setAccountDetails] = useState({});
+  const [showUpdatePasswordDialog, setShowUpdatePasswordDialog] =
+    useState(false);
 
   useEffect(() => {
     BackendClient.accountDetails(setAccountDetails, () => {});
@@ -14,11 +19,23 @@ const AccountDetails = () => {
 
   return isLoggedIn ? (
     <PageContainer>
-      <h1>Account Details</h1>
-      <p>Phone: {accountDetails.phone}</p>
-      <p>Email: {accountDetails.email}</p>
-      <p>First Name: {accountDetails.first}</p>
-      <p>Last Name: {accountDetails.last}</p>
+      {showUpdatePasswordDialog && (
+        <UpdatePasswordDialog
+          showDialog={showUpdatePasswordDialog}
+          setShowDialog={setShowUpdatePasswordDialog}
+        />
+      )}
+      <Typography variant="h3">Account Details</Typography>
+      <Typography variant="body1">Phone: {accountDetails.phone}</Typography>
+      <Typography variant="body1">Email: {accountDetails.email}</Typography>
+      <Typography variant="body1">
+        First Name: {accountDetails.first}
+      </Typography>
+      <Typography variant="body1">Last Name: {accountDetails.last}</Typography>
+      <Button
+        variant="outlined"
+        onClick={() => setShowUpdatePasswordDialog(true)}
+      >Change Password</Button>
     </PageContainer>
   ) : (
     <Login />

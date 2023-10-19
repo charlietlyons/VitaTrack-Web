@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button, Autocomplete, Container, FormGroup } from "@mui/material";
-import { StyledTextField } from "../common/Inputs";
-import { DialogContainer, FormContainer } from "../common/Containers";
-import BackendClient from "../../client/BackendClient";
+import { StyledTextField } from "../../common/Inputs";
+import { DialogContainer, FormContainer } from "../../common/Containers";
+import BackendClient from "../../../client/BackendClient";
 import FoodDialog from "../FoodDialog/FoodDialog";
-import useEnterButtonSubmit from "../../hooks/useEnterButtonSubmit";
-import AddIntakeValidator from "../../validators/AddIntakeValidator";
-import { FOOD, INTAKE } from "../common/constants";
+import useEnterButtonSubmit from "../../../hooks/useEnterButtonSubmit";
+import AddIntakeValidator from "../../../validators/AddIntakeValidator";
+import { FOOD, INTAKE } from "../../common/constants";
 
 // TODO: object is too big, refactor
 const IntakeDialog = (props) => {

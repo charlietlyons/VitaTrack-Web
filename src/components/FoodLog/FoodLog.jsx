@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@mui/material";
 import BackendClient from "../../client/BackendClient";
-import IntakeDialog from "../IntakeDialog/IntakeDialog";
+import IntakeDialog from "../dialogs/IntakeDialog/IntakeDialog";
 import Intake from "../Intake";
 import { INTAKE } from "../common/constants";
 
@@ -21,7 +21,7 @@ const FoodLog = (props) => {
     async (intakeId) => {
       setSelectedIntakeId(intakeId);
       setShowEditDialog(true);
-  },
+    },
     [setShowEditDialog, setSelectedIntakeId]
   );
 

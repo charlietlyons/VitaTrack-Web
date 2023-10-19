@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { PageContainer } from "./common/Containers";
 import { AuthContext } from "../context/AuthContext";
 import { Button } from "@mui/material";
-import IntakeDialog from "./IntakeDialog/IntakeDialog";
+import IntakeDialog from "./dialogs/IntakeDialog/IntakeDialog";
 import FoodLog from "./FoodLog/FoodLog";
 import Login from "./Login";
 import BackendClient from "../client/BackendClient";

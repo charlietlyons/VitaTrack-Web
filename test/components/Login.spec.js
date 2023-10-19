@@ -6,16 +6,19 @@ import React from "react";
 import { MockAuthContextProvider } from "../../test/context/MockAuthContext";
 import BackendClient from "../../src/client/BackendClient";
 import { BrowserRouter } from "react-router-dom";
+import { act } from "react-dom/test-utils";
 
 describe("Login", () => {
   describe("isLoggedIn is false", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       jest.resetAllMocks();
-      render(
-        <MockAuthContextProvider isLoggedIn={false}>
-          <Login />
-        </MockAuthContextProvider>
-      );
+      await act(() => {
+        render(
+          <MockAuthContextProvider isLoggedIn={false}>
+            <Login />
+          </MockAuthContextProvider>
+        );
+      });
     });
 
     it("should render login text and inputs", () => {
@@ -90,6 +93,18 @@ describe("Login", () => {
       fireEvent.keyDown(emailInputElement, { keyCode: 7 });
 
       expect(clientSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it("should show the forgot password dialog when clicking forgot password", async () => {
+      const forgotPasswordButtonElement = screen.getByText(/Forgot Password/i);
+
+      fireEvent.click(forgotPasswordButtonElement);
+
+      const forgotPasswordHeaderElement = await screen.findByText(
+        /Enter your email to receive a reset password link./i
+      );
+
+      expect(forgotPasswordHeaderElement).toBeInTheDocument();
     });
   });
 
