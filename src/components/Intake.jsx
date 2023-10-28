@@ -18,7 +18,11 @@ const Intake = (props) => {
   } = props;
 
   return (
-    <TableRow key={index} data-testid={`intake-${index}`}>
+    <TableRow
+      key={index}
+      id={`intake-${index}`}
+      data-testid={`intake-${index}`}
+    >
       <TableCell>{name}</TableCell>
       <TableCell>{quantity}</TableCell>
       <TableCell>{calories}</TableCell>
@@ -27,10 +31,12 @@ const Intake = (props) => {
       <TableCell>{fat}</TableCell>
       <TableCell>
         <EditOutlinedIcon
+          id={`edit-intake-button-${index}`}
           data-testid={`intake-edit-${index}`}
           onClick={() => editIntake(_id)}
         />
         <CloseOutlinedIcon
+          id={`delete-intake-button-${index}`}
           data-testid={`intake-delete-${index}`}
           onClick={() => deleteIntake(_id)}
         />

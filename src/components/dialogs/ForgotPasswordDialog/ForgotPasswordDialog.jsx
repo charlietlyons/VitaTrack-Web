@@ -18,7 +18,6 @@ const ForgotPasswordDialog = (props) => {
     }
   }, [setError, setShowDialog, email]);
 
-  // 13-17,32-37
   return (
     <DialogContainer
       title="Forgot Password"

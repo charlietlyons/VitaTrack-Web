@@ -169,10 +169,16 @@ const IntakeDialog = (props) => {
         buttons={
           isUpdate.current
             ? [
-                <Button variant="contained" onClick={submitHandler} fullWidth>
+                <Button
+                  id="update-button"
+                  variant="contained"
+                  onClick={submitHandler}
+                  fullWidth
+                >
                   Update
                 </Button>,
                 <Button
+                  id="cancel-button"
                   variant="outlined"
                   onClick={() => setShowDialog(false)}
                   fullWidth
@@ -188,10 +194,16 @@ const IntakeDialog = (props) => {
                 >
                   Add Food
                 </Button>,
-                <Button variant="contained" onClick={submitHandler} fullWidth>
+                <Button
+                  id="submit-button"
+                  variant="contained"
+                  onClick={submitHandler}
+                  fullWidth
+                >
                   Submit
                 </Button>,
                 <Button
+                  id="cancel-button"
                   variant="outlined"
                   onClick={() => setShowDialog(false)}
                   fullWidth

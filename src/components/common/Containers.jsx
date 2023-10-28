@@ -57,9 +57,15 @@ export const FormContainer = (props) => {
               );
             })}
 
-            {error && <output data-testid="form-error">{error}</output>}
+            {error && (
+              <output id="form-error" data-testid="form-error">
+                {error}
+              </output>
+            )}
             {footerLink && (
-              <Link onClick={footerLink.onClick}>{footerLink.text}</Link>
+              <Link id={footerLink.id} onClick={footerLink.onClick}>
+                {footerLink.text}
+              </Link>
             )}
           </CardContent>
         </Card>

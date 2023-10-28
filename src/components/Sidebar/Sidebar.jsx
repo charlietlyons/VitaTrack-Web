@@ -68,7 +68,7 @@ const Sidebar = (props) => {
 
   return (
     <Drawer variant="permanent" anchor="left" open={open}>
-      <List>
+      <List id="sidebar-nav-list">
         {(isLoggedIn ? loggedInItems : loggedOutItems).map((item, index) => {
           return (
             <SidebarListItem
@@ -82,6 +82,7 @@ const Sidebar = (props) => {
           );
         })}
         <SidebarListItem
+          id="sidebar-close"
           button
           icon={<ArrowBackIosNewTwoToneIcon />}
           onClick={sidebarHandler}

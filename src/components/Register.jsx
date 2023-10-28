@@ -128,7 +128,7 @@ const Register = () => {
         ></StyledTextField>,
       ]}
       buttons={[
-        <Button variant="contained" onClick={submitHandler}>
+        <Button id="submit" variant="contained" onClick={submitHandler}>
           Register
         </Button>,
       ]}

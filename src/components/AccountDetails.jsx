@@ -33,6 +33,7 @@ const AccountDetails = () => {
       </Typography>
       <Typography variant="body1">Last Name: {accountDetails.last}</Typography>
       <Button
+        id="change-password-button"
         variant="outlined"
         onClick={() => setShowUpdatePasswordDialog(true)}
       >Change Password</Button>

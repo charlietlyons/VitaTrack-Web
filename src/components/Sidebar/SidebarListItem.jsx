@@ -8,7 +8,7 @@ import {
 import { styled } from "@mui/material/styles";
 
 const SidebarListItem = (props) => {
-  const { title, icon, button, onClick, active, sx, testId } = props;
+  const { id, title, icon, button, onClick, active, sx, testId } = props;
 
   const activeStyling = {
     backgroundColor: "#f5f5f5",
@@ -44,6 +44,7 @@ const SidebarListItem = (props) => {
 
   return (
     <StyledListItem
+      id={id}
       title={title}
       key={title}
       onClick={onClick}

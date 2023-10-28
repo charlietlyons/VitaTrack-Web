@@ -26,7 +26,12 @@ const BackendClient = {
         errorSetter("Credentials provided are invalid.");
       }
     } catch (error) {
-      errorSetter(error.message);
+      console.log(await error);
+      if (error.response.status === 401) {
+        errorSetter("Credentials provided are invalid.");
+      } else {
+        errorSetter("There was an error communicating with the server.");
+      }
     }
     return false;
   },
