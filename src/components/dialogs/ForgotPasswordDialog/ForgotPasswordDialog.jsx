@@ -25,6 +25,7 @@ const ForgotPasswordDialog = (props) => {
       showDialog={showDialog}
     >
       <FormContainer
+        id="forgot-password-form"
         formFields={[
           <TextField
             value={email}

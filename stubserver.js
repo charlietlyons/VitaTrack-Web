@@ -7,7 +7,6 @@ const { v4: uuidv4 } = require("uuid");
 server.use(jsonServer.bodyParser);
 server.use(middlewares);
 
-// TODO: is running stub server necessary for cypress? should we just use cy.intercept?
 const defaultIntakeRecord = {
   _id: "6b99dc4c-2299-4ad2-8299-08cd7e3de025",
   userId: "someUserId1",

@@ -14,7 +14,7 @@
     "test:coverage": "jest --env=jsdom --coverage",
     "test:watch": "jest --watchAll --env=jsdom",
     "cypress:open": "cypress open",
-    "cypress:run": "concurrently \"npm run dev\" \"cypress run\"",
+    "cypress:run": "concurrently \"npm run start:dev\" \"cypress run\"",
     "coverage:open": "open coverage/lcov-report/index.html"
   },
   "author": "Charlotte Lyons",

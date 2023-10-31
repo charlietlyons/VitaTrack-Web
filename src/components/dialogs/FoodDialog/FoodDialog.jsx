@@ -106,6 +106,7 @@ const FoodDialog = (props) => {
   return (
     <DialogContainer title="Add Food" showDialog={showDialog}>
       <FormContainer
+        id="add-food-form"
         formFields={[
           <StyledTextField
             id={FOOD_NAME}

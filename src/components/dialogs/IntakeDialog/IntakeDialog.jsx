@@ -137,6 +137,7 @@ const IntakeDialog = (props) => {
       size="md"
     >
       <FormContainer
+        id="intake-form"
         size={12}
         error={error}
         formFields={[
@@ -195,7 +196,7 @@ const IntakeDialog = (props) => {
                   Add Food
                 </Button>,
                 <Button
-                  id="submit-button"
+                  id="add-button"
                   variant="contained"
                   onClick={submitHandler}
                   fullWidth

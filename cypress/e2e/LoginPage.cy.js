@@ -1,4 +1,10 @@
+import { mockLogin, mockVerifyToken } from "./TestUtils";
+
 describe("Login Page", () => {
+  beforeEach(() => {
+    mockLogin();
+  });
+
   it("should login through form", () => {
     visitPageAndInputCredentials();
     cy.get("#login-submit").click();
@@ -40,7 +46,7 @@ describe("Login Page", () => {
   });
 
   it("should redirect to daily stats if token provided", () => {
-    window.localStorage.setItem("token", "someTokens");
+    mockVerifyToken();
     cy.visit("http://localhost:8080/vitatrack/login", {
       onBeforeLoad: (win) => {
         win.localStorage.setItem("token", "someToken");

@@ -67,6 +67,7 @@ const Login = () => {
       )}
       {!isLoggedIn ? (
         <FormContainer
+          id="login-form"
           title={!isLoggedIn && <Heading1>Login</Heading1>}
           formFields={[
             <StyledTextField

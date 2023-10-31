@@ -1,3 +1,5 @@
+import { mockAccountDetails, mockVerifyToken } from "./TestUtils";
+
 describe("Common Functionality", () => {
   describe("Layout", () => {
     it("should display sidebar on click arrow", () => {
@@ -37,6 +39,8 @@ describe("Common Functionality", () => {
     });
 
     it("should redirect to account details on click", () => {
+      mockVerifyToken();
+      mockAccountDetails();
       cy.visit("http://localhost:8080/vitatrack/daily", {
         onBeforeLoad: (win) => {
           win.localStorage.setItem("token", "someToken");
@@ -53,6 +57,7 @@ describe("Common Functionality", () => {
     });
 
     it("should redirect to login on log out", () => {
+      mockVerifyToken();
       cy.visit("http://localhost:8080/vitatrack/daily", {
         onBeforeLoad: (win) => {
           win.localStorage.setItem("token", "someToken");
@@ -68,7 +73,8 @@ describe("Common Functionality", () => {
       cy.get("h1").contains("Login");
     });
 
-    it("should redirect to login on log out", () => {
+    it("should redirect to Daily Stats on click button", () => {
+      mockVerifyToken();
       cy.visit("http://localhost:8080/vitatrack/daily", {
         onBeforeLoad: (win) => {
           win.localStorage.setItem("token", "someToken");

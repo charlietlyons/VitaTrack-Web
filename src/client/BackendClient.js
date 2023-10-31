@@ -26,7 +26,6 @@ const BackendClient = {
         errorSetter("Credentials provided are invalid.");
       }
     } catch (error) {
-      console.log(await error);
       if (error.response.status === 401) {
         errorSetter("Credentials provided are invalid.");
       } else {
@@ -55,18 +54,17 @@ const BackendClient = {
     }
   },
 
-  accountDetails: (successHandler, failureHandler) => {
+  getAccountDetails: async () => {
     try {
-      axios
-        .get(`${url}/account-details`, {
-          headers: {
-            ...headers,
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          successHandler(response.data);
-        });
+      const response = await axios.get(`${url}/account-details`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response) {
+        return response.data;
+      }
     } catch (error) {
       failureHandler(error);
     }
@@ -211,7 +209,6 @@ const BackendClient = {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
       return response.data;
     } catch (err) {
       return [];

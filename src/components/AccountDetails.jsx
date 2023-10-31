@@ -14,7 +14,7 @@ const AccountDetails = () => {
     useState(false);
 
   useEffect(() => {
-    BackendClient.accountDetails(setAccountDetails, () => {});
+    setAccountDetails(BackendClient.getAccountDetails());
   }, [setAccountDetails]);
 
   return isLoggedIn ? (
@@ -36,7 +36,9 @@ const AccountDetails = () => {
         id="change-password-button"
         variant="outlined"
         onClick={() => setShowUpdatePasswordDialog(true)}
-      >Change Password</Button>
+      >
+        Change Password
+      </Button>
     </PageContainer>
   ) : (
     <Login />
