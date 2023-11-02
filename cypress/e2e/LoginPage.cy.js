@@ -1,4 +1,4 @@
-import { mockLogin, mockVerifyToken } from "./TestUtils";
+import { mockLogin, mockVerifyToken, mockForgetPasswordEmail } from "./TestUtils";
 
 describe("Login Page", () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe("Login Page", () => {
     visitPageAndInputCredentials();
     cy.get("#login-submit").click();
 
-    cy.get("#form-error").should(
+    cy.get("#form-error-login-form").should(
       "contain",
       "Credentials provided are invalid."
     );
@@ -39,7 +39,7 @@ describe("Login Page", () => {
     visitPageAndInputCredentials();
     cy.get("#login-submit").click();
 
-    cy.get("#form-error").should(
+    cy.get("#form-error-login-form").should(
       "contain",
       "There was an error communicating with the server."
     );
@@ -60,6 +60,37 @@ describe("Login Page", () => {
     cy.visit("http://localhost:8080/vitatrack/login", {});
 
     cy.get("#forgot-password").click();
+  });
+
+  it("should set error if send forgot password fails", () => {
+    cy.visit("http://localhost:8080/vitatrack/login", {});
+
+    cy.get("#forgot-password").click();
+
+    cy.get("#forgot-password-form").find("input").type("someemail.gmail.com")
+
+    cy.get("#forgot-password-form").contains("Submit").click();
+    cy.get("#form-error-forgot-password-form").should("contain.text", "An error occurred.");
+  })
+
+    it("should hide forgot password dialogue if send forgot password success", () => {
+      mockForgetPasswordEmail();
+      cy.visit("http://localhost:8080/vitatrack/login", {});
+
+      cy.get("#forgot-password").click();
+
+      cy.get("#forgot-password-form").find("input").type("someemail.gmail.com")
+
+      cy.get("#forgot-password-form").contains("Submit").click();
+      cy.get("#forgot-password-form").should("not.exist");
+  })
+
+  it("should hide forgot password dialogue if clicking cancel", () => {
+    cy.visit("http://localhost:8080/vitatrack/login", {});
+
+      cy.get("#forgot-password").click();
+      cy.get("#forgot-password-form").contains("Cancel").click();
+      cy.get("#forgot-password-form").should("not.exist");
   });
 });
 

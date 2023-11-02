@@ -17,11 +17,23 @@ let mockIntakes = [
     imageUrl: "",
   },
 ];
+let mockVerifyTokenThenMockAgainInterceptorCount = 0
 
 export function mockVerifyToken() {
   cy.intercept("POST", "/verify-token", {
     status: 200,
   });
+}
+
+export function mockVerifyTokenThenMockAgain(firstMock, secondMock) {
+  cy.intercept("POST", "/verify-token", (req) => {
+    if (mockVerifyTokenThenMockAgainInterceptorCount === 0 ) {
+      mockVerifyTokenThenMockAgainInterceptorCount += 1;
+      req.reply(firstMock)
+    } else {
+      req.reply(secondMock)
+    }
+  })
 }
 
 export function mockAccountDetails() {
@@ -38,6 +50,15 @@ export function mockLogin() {
     status: 200,
     body: {
       token: "someToken",
+    },
+  });
+}
+
+export function mockForgetPasswordEmail() {
+  cy.intercept("POST", "/forgot-password", {
+    status: 200,
+    body: {
+      
     },
   });
 }

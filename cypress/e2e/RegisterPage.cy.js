@@ -25,7 +25,7 @@ describe("Register Page", () => {
     cy.get("#submit").click();
 
     cy.contains("Register");
-    cy.get("#form-error").should("contain.text", "Passwords do not match");
+    cy.get("#form-error-register-form").should("contain.text", "Passwords do not match");
   });
 
   [
@@ -59,7 +59,7 @@ describe("Register Page", () => {
       cy.get("#submit").click();
 
       cy.contains("Register");
-      cy.get("#form-error").should("contain.text", "Form is incomplete");
+      cy.get("#form-error-register-form").should("contain.text", "Form is incomplete");
     });
   });
 });

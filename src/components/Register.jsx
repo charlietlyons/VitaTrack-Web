@@ -80,6 +80,7 @@ const Register = () => {
 
   return (
     <FormContainer
+      id="register-form"
       title={<Heading1>Register</Heading1>}
       formFields={[
         <StyledTextField

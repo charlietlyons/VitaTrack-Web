@@ -11,7 +11,7 @@ const ForgotPasswordDialog = (props) => {
 
   const submitHandler = useCallback(async () => {
     const response = await BackendClient.sendForgotPasswordEmail(email);
-    if (response && response.status === 200) {
+    if (response) {
       setShowDialog(false);
     } else {
       setError("An error occurred.");

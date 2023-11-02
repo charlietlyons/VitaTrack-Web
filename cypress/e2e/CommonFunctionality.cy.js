@@ -1,4 +1,4 @@
-import { mockAccountDetails, mockVerifyToken } from "./TestUtils";
+import { mockAccountDetails, mockVerifyToken, mockVerifyTokenThenMockAgain } from "./TestUtils";
 
 describe("Common Functionality", () => {
   describe("Layout", () => {
@@ -57,13 +57,16 @@ describe("Common Functionality", () => {
     });
 
     it("should redirect to login on log out", () => {
-      mockVerifyToken();
+      mockVerifyTokenThenMockAgain({
+        status: 401,
+      }, {
+        status: 401
+      });
       cy.visit("http://localhost:8080/vitatrack/daily", {
         onBeforeLoad: (win) => {
           win.localStorage.setItem("token", "someToken");
         },
       });
-
       cy.get("h1").contains("Daily Stats");
 
       cy.get("#sidebar-floating-button").click();

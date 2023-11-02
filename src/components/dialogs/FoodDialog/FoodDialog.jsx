@@ -189,7 +189,7 @@ const FoodDialog = (props) => {
           ></StyledTextField>,
         ]}
         buttons={[
-          <Button variant="contained" onClick={submitHandler} fullWidth>
+          <Button id={"add-food-button"} variant="contained" onClick={submitHandler} fullWidth>
             {isUpdate.current ? "Update" : "Add"}
           </Button>,
           <Button variant="outlined" onClick={addFoodCloseHandler} fullWidth>
