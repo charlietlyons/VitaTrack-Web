@@ -57,10 +57,13 @@ export function mockVerifyTokenThenMockAgain(firstMock, secondMock) {
 
 export function mockAccountDetails() {
   cy.intercept("GET", "/account-details", {
-    first: "Tim",
-    last: "Johnson",
-    phone: "555-555-5555",
-    email: "someEmail@gmail.com",
+    status: 200,
+    body: {
+      first: "Tim",
+      last: "Johnson",
+      phone: "555-555-5555",
+      email: "someemail",
+    }
   });
 }
 

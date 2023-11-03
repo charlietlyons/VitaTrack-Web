@@ -297,7 +297,7 @@ describe("Daily Stats Page", () => {
     it("should not delete intake if delete fails", () => {
       cy.intercept(
         "DELETE",
-        "http://localhost:3000/intake/6b99dc4c-2299-4ad2-8299-08cd7e3de025",
+        "/intake/*",
         {
           statusCode: 500,
           body: {},
@@ -308,7 +308,7 @@ describe("Daily Stats Page", () => {
 
       cy.get("#delete-intake-button-0").click();
 
-      cy.get("#form-error").contains(
+      cy.get("#daily-log-error").contains(
         "Could not delete intake. Try again later."
       );
     });
@@ -320,7 +320,26 @@ describe("Daily Stats Page", () => {
 
       cy.get("#intake-0").should("not.exist");
     });
+
+    
+  it("should display error if refresh fails", () => {
+    cy.intercept(
+      "GET",
+      "/intake?*",
+      {
+        statusCode: 500,
+        body: {},
+      }
+    );
+
+    visitPage();
+
+    cy.get("#daily-log-error").contains(
+      "Something went wrong."
+    );
+  })
   });
+
 });
 
 function visitPage() {

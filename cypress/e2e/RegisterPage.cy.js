@@ -19,7 +19,29 @@ describe("Register Page", () => {
     cy.contains("Login");
   });
 
-  it("set error to passwords don't match", () => {
+  it("should set error if backend error thrown", () => {
+    cy.intercept("POST", "/register-user", {
+      statusCode: 400,
+    });
+
+    visitPageAndInputForm([]);
+
+    cy.get("#submit").click();
+    cy.get("#form-error-register-form").should("contain.text", "An error occurred. Please try again later.");
+  })
+
+  it("should set error if response is not 200", () => {
+    cy.intercept("POST", "/register-user", {
+      statusCode: 204,
+    });
+
+    visitPageAndInputForm([]);
+
+    cy.get("#submit").click();
+    cy.get("#form-error-register-form").should("contain.text", "An error occurred. Please try again later.");
+  })
+
+  it("should set error to passwords don't match", () => {
     visitPageAndInputForm();
     cy.get("#password-confirmation").type("MOREPASSWORD");
     cy.get("#submit").click();

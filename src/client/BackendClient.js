@@ -46,7 +46,7 @@ const BackendClient = {
       if (response.status === 200) {
         registerSuccessHandler();
       } else {
-        registerFailureHandler("User already exists");
+        registerFailureHandler("An error occurred. Please try again later.");
       }
     } catch (error) {
       registerFailureHandler("An error occurred. Please try again later.");
@@ -61,11 +61,14 @@ const BackendClient = {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      if (response) {
+      if (response.status === 200) {
+        console.log(response.data)
         return response.data;
+      } else {
+        return {};
       }
     } catch (error) {
-      failureHandler(error);
+      return {};
     }
   },
 

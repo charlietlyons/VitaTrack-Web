@@ -28,6 +28,19 @@ describe("Account Details Page", () => {
 
       cy.contains("Enter your new password.");
     });
+
+    it("should set error to could not retrieve if backend error thrown", () => {
+      mockVerifyToken();
+      cy.intercept("GET", "/account-details", {
+        statusCode: 400,
+      });
+
+      visitPage();
+
+      cy.get("#account-details-error").should("contain",
+        "Could not retrieve account details."
+      );
+    });
   })
   
 
