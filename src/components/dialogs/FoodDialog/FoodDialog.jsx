@@ -42,7 +42,7 @@ const FoodDialog = (props) => {
     description: "",
     imageUrl: "",
   });
-  const { showDialog, addFoodCloseHandler, foodData } = props;
+  const { setFood, showDialog, addFoodCloseHandler, foodData } = props;
   const isUpdate = useRef(foodData ? true : false);
   const [error, setError] = useState("");
 
@@ -76,18 +76,18 @@ const FoodDialog = (props) => {
   }, [addFoodCloseHandler, setError, state]);
 
   const updateHandler = useCallback(async () => {
-    const response = BackendClient.update(FOOD, state);
+    const response = await BackendClient.update(FOOD, state);
 
     if (response) {
       dispatch({
         type: CLEAR,
         payload: {},
       });
-      addFoodCloseHandler();
+      addFoodCloseHandler(state);
     } else {
       setError("Something went wrong.");
     }
-  }, [state, setError, addFoodCloseHandler]);
+  }, [state, setError, changeHandler, setFood, addFoodCloseHandler]);
 
   const submitHandler = useCallback(() => {
     if (AddFoodValidator.validate(state, setError)) {
@@ -189,10 +189,10 @@ const FoodDialog = (props) => {
           ></StyledTextField>,
         ]}
         buttons={[
-          <Button id={"add-food-button"} variant="contained" onClick={submitHandler} fullWidth>
+          <Button id="add-update-food-button" variant="contained" onClick={submitHandler} fullWidth>
             {isUpdate.current ? "Update" : "Add"}
           </Button>,
-          <Button variant="outlined" onClick={addFoodCloseHandler} fullWidth>
+          <Button id="close-add-food-button" variant="outlined" onClick={(e) => addFoodCloseHandler()} fullWidth>
             Close
           </Button>,
         ]}

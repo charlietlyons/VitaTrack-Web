@@ -5,6 +5,19 @@ describe("Login Page", () => {
     mockLogin();
   });
 
+  it("should set error to Credential provided are invalid if credentials invalid", () => {
+    cy.intercept("POST", "http://localhost:3000/verify-user", {
+      statusCode: 401,
+    });
+    visitPageAndInputCredentials();
+    cy.get("#login-submit").click();
+
+    cy.get("#form-error-login-form").should(
+      "contain",
+      "Credentials provided are invalid."
+    );
+  });
+
   it("should login through form", () => {
     visitPageAndInputCredentials();
     cy.get("#login-submit").click();

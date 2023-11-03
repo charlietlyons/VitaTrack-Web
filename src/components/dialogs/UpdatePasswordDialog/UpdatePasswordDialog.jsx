@@ -4,7 +4,7 @@ import { Button, TextField } from "@mui/material";
 import BackendClient from "../../../client/BackendClient";
 import UpdatePasswordValidator from "../../../validators/UpdatePasswordValidator";
 
-const ForgotPasswordDialog = (props) => {
+const UpdatePasswordDialog = (props) => {
   const { showDialog, setShowDialog } = props;
 
   const [password, setPassword] = useState("");
@@ -19,7 +19,7 @@ const ForgotPasswordDialog = (props) => {
       )
     ) {
       const response = await BackendClient.updatePassword(password);
-      if (response && response.status === 200) {
+      if (response) {
         setShowDialog(false);
       } else {
         setError("An error occurred.");
@@ -34,14 +34,17 @@ const ForgotPasswordDialog = (props) => {
       showDialog={showDialog}
     >
       <FormContainer
+        id="update-password-form"
         formFields={[
           <TextField
+            id="new-password"
             value={password}
             label="Password"
             inputProps={{ "data-testid": "password" }}
             onChange={(event) => setPassword(event.target.value)}
           />,
           <TextField
+            id="confirm-password"
             value={passwordConfirmation}
             label="Confirm Password"
             inputProps={{ "data-testid": "passwordConfirmation" }}
@@ -50,10 +53,10 @@ const ForgotPasswordDialog = (props) => {
         ]}
         error={error}
         buttons={[
-          <Button variant="contained" onClick={() => setShowDialog(false)}>
+          <Button id="cancel-button" variant="contained" onClick={() => setShowDialog(false)}>
             Cancel
           </Button>,
-          <Button variant="contained" onClick={submitHandler}>
+          <Button id="submit-password-button" variant="contained" onClick={submitHandler}>
             Submit
           </Button>,
         ]}
@@ -62,4 +65,4 @@ const ForgotPasswordDialog = (props) => {
   );
 };
 
-export default ForgotPasswordDialog;
+export default UpdatePasswordDialog;

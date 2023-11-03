@@ -8,7 +8,15 @@
       "last": "last"
     }
   ],
-  "intakes": [],
+  "intakes": [
+    {
+      "_id": "6b99dc4c-2299-4ad2-8299-08cd7e3de025",
+      "userId": "someUserId1",
+      "dayId": "someDayId",
+      "foodId": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
+      "quantity": 10000
+    }
+  ],
   "verify-token": {
     "token": ""
   },

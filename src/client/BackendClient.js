@@ -6,6 +6,7 @@ const headers = {
 };
 
 // TODO: convert to class/hook and use async/await instead
+// TODO: convert specific methods to general ones
 // TODO: Divide into smaller clients based on their domain
 const BackendClient = {
   login: async (email, password, errorSetter) => {
@@ -22,8 +23,6 @@ const BackendClient = {
         localStorage.setItem("token", response.data.token);
         errorSetter("");
         return true;
-      } else if (response.status === 401) {
-        errorSetter("Credentials provided are invalid.");
       }
     } catch (error) {
       if (error.response.status === 401) {

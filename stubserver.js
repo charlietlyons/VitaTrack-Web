@@ -13,20 +13,40 @@ const defaultIntakeRecord = {
   dayId: "someDayId",
   foodId: "b4bc2367-b42e-406a-ad3e-693f2307c49c",
   quantity: 10000,
-  name: "Grapes",
-  calories: 1000,
-  fat: 1,
-  protein: 1000,
-  carbs: 3000,
-  servingSize: 3,
-  servingUnit: "g",
-  access: "PUBLIC_ACCESS",
-  description: "",
-  imageUrl: "",
 };
+const defaultFoodRecord = [{
+      "_id": "b4bc2367-b42e-406a-ad3e-693f2307c49c",
+      "userId": "someUserId",
+      "name": "Grapes",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
+    },
+    {
+      "_id": "b4bc2767-b42e-406a-ad3e-693f2307c49c",
+      "userId": "someUserId",
+      "name": "Bananas",
+      "calories": 1000,
+      "protein": 1000,
+      "carbs": 3000,
+      "fat": 1,
+      "servingSize": 3,
+      "servingUnit": "g",
+      "access": "PUBLIC_ACCESS",
+      "description": "",
+      "imageUrl": ""
+    }];
 
 router.db.get("intakes").remove().write();
+router.db.get("food").remove().write();
 router.db.get("intakes").push(defaultIntakeRecord).write();
+defaultFoodRecord.forEach(record => router.db.get("food").push(record).write());
 
 function handleLogin(req, res) {
   const { email, password } = req.body;
@@ -79,7 +99,18 @@ function handleAccountDetails(req, res) {
 }
 
 function handleGetIntakes(req, res) {
-  const intakeRecords = router.db.get("intakes");
+  const intakeRecords = router.db.get("intakes").value();
+  
+  intakeRecords.forEach((intakeRecord) => {
+    const foodData = router.db.get("food").find({ _id: intakeRecord.foodId }).value();
+    intakeRecord.name = foodData.name;
+    intakeRecord.calories = foodData.calories;
+    intakeRecord.fat = foodData.fat;
+    intakeRecord.protein = foodData.protein;
+    intakeRecord.carbs = foodData.carbs;
+    intakeRecord.servingSize = foodData.servingSize;
+    intakeRecord.servingUnit = foodData.servingUnit;
+  })
 
   if (intakeRecords) {
     res.json(intakeRecords);
@@ -88,10 +119,19 @@ function handleGetIntakes(req, res) {
   }
 }
 
-async function handleGetIntakeById(req, res) {
+function handleGetIntakeById(req, res) {
+  const id = req.path.split("/")[2]
   const intakeRecords = router.db.get("intakes").value();
-  const firstIntake = intakeRecords[0];
-  res.json(firstIntake);
+  const intake = intakeRecords.find((intake) => intake._id === id);
+  const foodData = router.db.get("food").find({ _id: intake.foodId }).value();
+  intake.name = foodData.name;
+  intake.calories = foodData.calories;
+  intake.fat = foodData.fat;
+  intake.protein = foodData.protein;
+  intake.carbs = foodData.carbs;
+  intake.servingSize = foodData.servingSize;
+  intake.servingUnit = foodData.servingUnit;
+  res.json(intake);
 }
 
 function handle200(req, res) {
@@ -155,6 +195,17 @@ function handleGetFoodOptions(req, res) {
   }
 }
 
+function handleFoodPost(req, res) {
+  router.db.get("food").push(req.body).write();
+  res.status(200).send();
+}
+
+function handleFoodPatch(req, res) {
+  router.db.get("food").remove({ _id: req.body._id}).write();
+  router.db.get("food").push(req.body).write();
+  res.status(200).send();
+}
+
 // USER
 server.get("/account-details", handleAccountDetails);
 server.post("/register-user", handleRegistration);
@@ -172,8 +223,8 @@ server.delete("/intake/:id", handleDeleteIntake);
 
 // FOOD
 server.get("/food", handleGetFoodOptions);
-server.post("/food", handle200);
-server.patch("/food", handle200);
+server.post("/food", handleFoodPost);
+server.patch("/food", handleFoodPatch);
 
 server.use(router);
 

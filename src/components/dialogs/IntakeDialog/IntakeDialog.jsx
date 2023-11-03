@@ -21,7 +21,7 @@ const IntakeDialog = (props) => {
 
   useEffect(() => {
     getFoodOptionsData();
-  }, [getFoodOptionsData, isUpdate]);
+  }, [getFoodOptionsData]);
 
   useEffect(() => {
     if (isUpdate.current && foodOptions.length > 0) {
@@ -73,10 +73,15 @@ const IntakeDialog = (props) => {
     [setQuantity]
   );
 
-  const addFoodCloseHandler = useCallback(() => {
-    getFoodOptionsData();
+  const addFoodCloseHandler = useCallback(async (newState) => {
+    if (newState) {
+      setFood(newState.name);
+      setSelectedFoodData(newState);
+    }
+    const foodOptionsData = await BackendClient.getFoodOptions();
+    setFoodOptions(foodOptionsData);
     setShowFoodDialog(false);
-  }, [setShowFoodDialog, getFoodOptionsData]);
+  }, [setShowFoodDialog, setFoodOptions, setSelectedFoodData, setFood, foodOptions]);
 
   const deleteFoodHandler = useCallback(async () => {
     if (selectedFoodData) {
@@ -154,8 +159,8 @@ const IntakeDialog = (props) => {
                 <StyledTextField {...params} label="Food" />
               )}
             ></Autocomplete>
-            <Button onClick={() => setShowFoodDialog(true)}>Edit</Button>
-            <Button onClick={() => deleteFoodHandler()}>Delete</Button>
+            <Button id="edit-food-button" onClick={() => setShowFoodDialog(true)}>Edit</Button>
+            <Button id="delete-food-button" onClick={() => deleteFoodHandler()}>Delete</Button>
           </FormGroup>,
           <StyledTextField
             id="quantity"
@@ -189,6 +194,7 @@ const IntakeDialog = (props) => {
               ]
             : [
                 <Button
+                  id="add-food-button"
                   variant="outlined"
                   onClick={() => setShowFoodDialog(true)}
                   fullWidth
@@ -219,6 +225,7 @@ const IntakeDialog = (props) => {
           foodData={selectedFoodData}
           showDialog={showFoodDialog}
           addFoodCloseHandler={addFoodCloseHandler}
+          setFood={setFood}
         ></FoodDialog>
       )}
     </DialogContainer>
