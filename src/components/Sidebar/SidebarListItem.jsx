@@ -38,9 +38,7 @@ const SidebarListItem = (props) => {
     }
   `;
 
-  const IconComponent = icon ? (
-    <StyledListItemIcon title="sidebar-item-icon">{icon}</StyledListItemIcon>
-  ) : null;
+  const IconComponent = <StyledListItemIcon title="sidebar-item-icon">{icon}</StyledListItemIcon>;
 
   return (
     <StyledListItem
@@ -51,17 +49,10 @@ const SidebarListItem = (props) => {
       sx={active ? activeStyling : {}}
       data-testid={testId}
     >
-      {button ? (
         <StyledListItemButton title="sidebar-item-button">
           {title}
           {IconComponent}
         </StyledListItemButton>
-      ) : (
-        <>
-          <ListItemText primary={title} />
-          {IconComponent}
-        </>
-      )}
     </StyledListItem>
   );
 };

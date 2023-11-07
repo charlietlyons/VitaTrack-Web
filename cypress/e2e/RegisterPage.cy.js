@@ -1,3 +1,5 @@
+import RegisterFormReducer from "../../src/reducers/RegisterFormReducer";
+
 describe("Register Page", () => {
   it("should submit and redirect to Login", () => {
     cy.intercept("POST", "http://localhost:3000/register-user", {

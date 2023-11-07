@@ -454,27 +454,7 @@ describe("BackendClient", () => {
       expect(options).toEqual([]);
     });
   });
-
-  describe("getFoodById", () => {
-    it("should return data", async () => {
-      axios.get.mockReturnValue({ data: { _id: "id", name: "name" } });
-
-      const result = await BackendClient.getFoodById("foodId");
-
-      expect(result).toEqual({ _id: "id", name: "name" });
-    });
-
-    it("should return false if error", async () => {
-      axios.get.mockImplementation(() => {
-        throw new Error("ahhhhh goooood");
-      });
-
-      const result = await BackendClient.getFoodById("foodId");
-
-      expect(result).toEqual(false);
-    });
-  });
-
+  
   describe("post", () => {
     it("should call callback with true if response is 200", async () => {
       const response = { status: 200 };

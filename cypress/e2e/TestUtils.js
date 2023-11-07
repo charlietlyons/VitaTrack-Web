@@ -206,8 +206,24 @@ export function mockDeleteFood() {
   });
 }
 
+export function mockDeleteIntake() {
+  cy.intercept("DELETE", "/intake/*", (req) => {
+    const id = req.url.split("/").pop() 
+    mockIntakes = mockIntakes.filter((option) => option._id !== id)
+    req.reply(200)
+  });
+}
+
 export function mockGetFoodOptions() {
   cy.intercept("GET", "/food", (req) => { 
     req.reply(200, mockFoodOptions)
+  });
+}
+
+export function visitDailyStatsPage() {
+  cy.visit("http://localhost:8080/vitatrack/daily", {
+    onBeforeLoad: (win) => {
+      win.localStorage.setItem("token", "someToken");
+    },
   });
 }

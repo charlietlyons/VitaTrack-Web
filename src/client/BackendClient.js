@@ -23,7 +23,10 @@ const BackendClient = {
         localStorage.setItem("token", response.data.token);
         errorSetter("");
         return true;
+      } else {
+        errorSetter("An error occurred trying to login. Try again later.");
       }
+      
     } catch (error) {
       if (error.response.status === 401) {
         errorSetter("Credentials provided are invalid.");
@@ -136,26 +139,21 @@ const BackendClient = {
   },
 
   getIntakes(successHandler, failureHandler) {
-    try {
-      axios
-        .get(`${url}/intake`, {
-          headers: {
-            ...headers,
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          params: {
-            date: new Date().toJSON().slice(0, 10),
-          },
-        })
-        .then((response) => {
-          successHandler(response.data);
-        })
-        .catch(() => {
-          failureHandler("Something went wrong.");
-        });
-    } catch (error) {
-      failureHandler("Something went wrong.");
-    }
+    axios
+      .get(`${url}/intake`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        params: {
+          date: new Date().toJSON().slice(0, 10),
+        },
+      })
+      .then((response) => {
+        successHandler(response.data);
+      }).catch((error) => {
+        failureHandler("Something went wrong. Network error.");
+      });
   },
 
   async getIntakeById(intakeId) {
@@ -217,24 +215,8 @@ const BackendClient = {
     }
   },
 
-  async getFoodById(foodId) {
-    try {
-      const response = await axios.get(`${url}/food/${foodId}`, {
-        headers: {
-          ...headers,
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      return response.data;
-    } catch (err) {
-      return false;
-    }
-  },
-
   addFood(body, successHandler, failureHandler) {
-    try {
-      axios
+    axios
         .post(
           `${url}/food`,
           { ...body },
@@ -247,21 +229,16 @@ const BackendClient = {
         )
         .then(successHandler)
         .catch(failureHandler);
-    } catch (error) {
-      failureHandler(error);
-    }
   },
 
   post: async (endpoint, formData) => {
     try {
-      const response = await axios.post(`${url}/${endpoint}`, formData, {
+      return await axios.post(`${url}/${endpoint}`, formData, {
         headers: {
           ...headers,
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
-      return response;
     } catch (error) {
       return false;
     }
