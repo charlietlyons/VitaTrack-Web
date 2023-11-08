@@ -34,7 +34,11 @@ const DailyStats = () => {
     <PageContainer>
       <h1>Daily Stats</h1>
       {/* TODO: Make this a floating button */}
-      <Button id="add-intake-id" variant="contained" onClick={() => setShowAddIntakeForm(true)}>
+      <Button
+        id="add-intake-id"
+        variant="contained"
+        onClick={() => setShowAddIntakeForm(true)}
+      >
         Add Intake
       </Button>
       <FoodLog

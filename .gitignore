@@ -1,7 +1,7 @@
 *secret*
 .env
 /node_modules
-**/coverage
+**/*coverage
 **/screenshots
 
 package-lock.json

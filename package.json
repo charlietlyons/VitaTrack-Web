@@ -60,6 +60,7 @@
   },
   "jest": {
     "resetMocks": true,
+    "coverageDirectory": "jest-coverage",
     "testEnvironment": "jsdom",
     "testMatch": [
       "**/*.spec.js"
@@ -71,5 +72,8 @@
       "./src/index.js",
       "./src/App.jsx"
     ]
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage"
   }
 }

@@ -89,10 +89,10 @@ describe("UpdatePasswordDialog", () => {
     expect(setShowDialogMock).toHaveBeenCalledWith(false);
   });
 
-  it("should setError if status is not 200", async () => {
+  it("should setError if returns false", async () => {
     const setShowDialogMock = jest.fn();
     const updatePasswordMock = jest.fn().mockImplementation(() => {
-      return { status: 400 };
+      return false;
     });
     const setErrorMock = jest.fn();
 

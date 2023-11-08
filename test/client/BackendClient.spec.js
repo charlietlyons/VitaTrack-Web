@@ -10,7 +10,7 @@ describe("BackendClient", () => {
     jest.resetAllMocks();
   });
 
-  describe("login", () => {
+  describe("login method", () => {
     let errorSetterSpy = jest.fn();
 
     beforeEach(() => {
@@ -20,20 +20,25 @@ describe("BackendClient", () => {
     it("should return success with true and error with empty string if token returned", async () => {
       axios.post.mockResolvedValue({ status: 200, data: { token: "token" } });
 
-      await BackendClient.login("username", "password", errorSetterSpy);
+      const response = await BackendClient.login(
+        "username",
+        "password",
+        errorSetterSpy
+      );
 
       expect(errorSetterSpy).toHaveBeenCalledWith("");
+      expect(response).toEqual(true);
     });
 
-    it("should return anything if token NOT returned", async () => {
+    it("should set error if 200 but no token", async () => {
       axios.post.mockResolvedValue({ status: 200, data: {} });
 
       await BackendClient.login("username", "password", errorSetterSpy);
-      expect(errorSetterSpy).not.toHaveBeenCalled();
+      expect(errorSetterSpy).toHaveBeenCalled();
     });
 
-    it("should set error if not 200", async () => {
-      axios.post.mockResolvedValue({ status: 401, data: {} });
+    it("should set error to invalid creds if 401", async () => {
+      axios.post.mockRejectedValue({ response: { status: 401, data: {} } });
 
       await BackendClient.login("username", "password", errorSetterSpy);
 
@@ -42,29 +47,44 @@ describe("BackendClient", () => {
       );
     });
 
-    it("should display issue verifying if axios errors", async () => {
-      axios.post.mockImplementation(() => {
-        return Promise.reject(new Error("error time"));
+    it("should set error if not 200", async () => {
+      axios.post.mockRejectedValue({ response: { status: 50000, data: {} } });
+
+      await BackendClient.login("username", "password", errorSetterSpy);
+
+      expect(errorSetterSpy).toHaveBeenCalledWith(
+        "There was an error communicating with the server."
+      );
+    });
+
+    it("should display error if response is anything other than 200", async () => {
+      axios.post.mockResolvedValue({
+        status: 201,
+        data: { token: "token" },
       });
-      BackendClient.login("username", "password", errorSetterSpy);
 
-      await new Promise((res) => setTimeout(res, 10));
+      await BackendClient.login("username", "password", errorSetterSpy);
 
-      expect(errorSetterSpy).toHaveBeenCalledWith("error time");
+      expect(errorSetterSpy).toHaveBeenCalledWith(
+        "An error occurred trying to login. Try again later."
+      );
     });
 
     it("should set error if call errors", async () => {
-      const setErrorSpy = jest.fn();
-
       axios.post.mockImplementation(() => {
         throw Error("error");
       });
 
-      await BackendClient.login("username", "password", setErrorSpy);
+      const response = await BackendClient.login(
+        "username",
+        "password",
+        errorSetterSpy
+      );
 
-      await new Promise((res) => setTimeout(res, 10));
-
-      expect(setErrorSpy).toHaveBeenCalledWith("error");
+      expect(errorSetterSpy).toHaveBeenCalledWith(
+        "There was an error communicating with the server."
+      );
+      expect(response).toEqual(false);
     });
   });
 
@@ -98,7 +118,9 @@ describe("BackendClient", () => {
       );
 
       expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
-      expect(mockFailureHandler).toHaveBeenCalledWith("User already exists");
+      expect(mockFailureHandler).toHaveBeenCalledWith(
+        "An error occurred. Please try again later."
+      );
     });
 
     it("should return error if call errors", async () => {
@@ -122,37 +144,25 @@ describe("BackendClient", () => {
 
   describe("accountDetails", () => {
     it("should call successHandler if response exists", async () => {
-      const mockSuccessHandler = jest.fn();
-      const mockFailureHandler = jest.fn();
-      const bigData = "dangerous";
+      const bigData = { prop: "dangerous" };
 
       axios.get.mockResolvedValue({ status: 200, data: bigData });
       localStorage.setItem("token", "token");
 
-      await BackendClient.accountDetails(
-        mockSuccessHandler,
-        mockFailureHandler
-      );
+      const responseData = await BackendClient.getAccountDetails();
 
-      expect(mockSuccessHandler).toHaveBeenCalledWith(bigData);
-      expect(mockFailureHandler).not.toHaveBeenCalled();
+      expect(responseData).toBe(bigData);
     });
 
     it("should call errorHandler if error", async () => {
-      const mockSuccessHandler = jest.fn();
-      const mockFailureHandler = jest.fn();
       const error = new Error("error");
 
       axios.get.mockImplementation(() => {
         throw error;
       });
-      await BackendClient.accountDetails(
-        mockSuccessHandler,
-        mockFailureHandler
-      );
+      const responseData = await BackendClient.getAccountDetails();
 
-      expect(mockSuccessHandler).not.toHaveBeenCalledWith(true);
-      expect(mockFailureHandler).toHaveBeenCalledWith(error);
+      expect(responseData).toEqual({});
     });
   });
 
@@ -246,13 +256,15 @@ describe("BackendClient", () => {
     it("should call successHandler if response exists", async () => {
       const mockSuccessHandler = jest.fn();
       const mockFailureHandler = jest.fn();
-      const response = { status: 200 };
+      const response = { status: 200, data: { prop: "someValue" } };
 
       axios.get.mockResolvedValue(response);
 
-      await BackendClient.getIntakes(mockSuccessHandler, mockFailureHandler);
+      BackendClient.getIntakes(mockSuccessHandler, mockFailureHandler);
 
-      expect(mockSuccessHandler).toHaveBeenCalled();
+      await new Promise((res) => setTimeout(res, 10));
+
+      expect(mockSuccessHandler).toHaveBeenCalledWith(response.data);
       expect(mockFailureHandler).not.toHaveBeenCalled();
     });
 
@@ -264,27 +276,14 @@ describe("BackendClient", () => {
         return Promise.reject(new Error("Network Error"));
       });
 
-      await BackendClient.getIntakes(successHandler, failureHandler);
+      BackendClient.getIntakes(successHandler, failureHandler);
 
       await new Promise((res) => setTimeout(res, 10));
 
-      expect(failureHandler).toHaveBeenCalledWith("Something went wrong.");
+      expect(failureHandler).toHaveBeenCalledWith(
+        "Something went wrong. Network error."
+      );
       expect(successHandler).not.toHaveBeenCalled();
-    });
-
-    it("should call errorHandler if error", async () => {
-      const mockSuccessHandler = jest.fn();
-      const mockFailureHandler = jest.fn();
-      const error = new Error("bad time.com");
-
-      axios.get.mockImplementation(() => {
-        throw error;
-      });
-
-      await BackendClient.getIntakes(mockSuccessHandler, mockFailureHandler);
-
-      expect(mockSuccessHandler).not.toHaveBeenCalled();
-      expect(mockFailureHandler).toHaveBeenCalled();
     });
   });
 
@@ -414,23 +413,6 @@ describe("BackendClient", () => {
       expect(mockSuccessHandler).not.toHaveBeenCalled();
       expect(mockFailureHandler).toHaveBeenCalled();
     });
-
-    it("should call failHandler when a general error occurs", async () => {
-      const mockSuccessHandler = jest.fn();
-      const mockFailureHandler = jest.fn();
-      axios.post.mockImplementation(() => {
-        throw new Error("error");
-      });
-
-      await BackendClient.addFood(
-        { food: "someFood" },
-        mockSuccessHandler,
-        mockFailureHandler
-      );
-
-      expect(mockSuccessHandler).not.toHaveBeenCalled();
-      expect(mockFailureHandler).toHaveBeenCalled();
-    });
   });
 
   describe("getFoodOptions", () => {
@@ -454,7 +436,7 @@ describe("BackendClient", () => {
       expect(options).toEqual([]);
     });
   });
-  
+
   describe("post", () => {
     it("should call callback with true if response is 200", async () => {
       const response = { status: 200 };

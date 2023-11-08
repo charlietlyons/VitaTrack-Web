@@ -18,7 +18,6 @@ const BackendClient = {
           headers: headers,
         }
       );
-
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
         errorSetter("");
@@ -26,9 +25,8 @@ const BackendClient = {
       } else {
         errorSetter("An error occurred trying to login. Try again later.");
       }
-      
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         errorSetter("Credentials provided are invalid.");
       } else {
         errorSetter("There was an error communicating with the server.");
@@ -65,7 +63,6 @@ const BackendClient = {
         },
       });
       if (response.status === 200) {
-        console.log(response.data)
         return response.data;
       } else {
         return {};
@@ -151,7 +148,8 @@ const BackendClient = {
       })
       .then((response) => {
         successHandler(response.data);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         failureHandler("Something went wrong. Network error.");
       });
   },
@@ -217,18 +215,18 @@ const BackendClient = {
 
   addFood(body, successHandler, failureHandler) {
     axios
-        .post(
-          `${url}/food`,
-          { ...body },
-          {
-            headers: {
-              ...headers,
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(successHandler)
-        .catch(failureHandler);
+      .post(
+        `${url}/food`,
+        { ...body },
+        {
+          headers: {
+            ...headers,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(successHandler)
+      .catch(failureHandler);
   },
 
   post: async (endpoint, formData) => {
