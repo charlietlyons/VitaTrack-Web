@@ -6,6 +6,7 @@ const headers = {
 };
 
 // TODO: convert to class/hook and use async/await instead
+// TODO: convert specific methods to general ones
 // TODO: Divide into smaller clients based on their domain
 const BackendClient = {
   login: async (email, password, errorSetter) => {
@@ -17,16 +18,19 @@ const BackendClient = {
           headers: headers,
         }
       );
-
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
         errorSetter("");
         return true;
-      } else if (response.status === 401) {
-        errorSetter("Credentials provided are invalid.");
+      } else {
+        errorSetter("An error occurred trying to login. Try again later.");
       }
     } catch (error) {
-      errorSetter(error.message);
+      if (error.response && error.response.status === 401) {
+        errorSetter("Credentials provided are invalid.");
+      } else {
+        errorSetter("There was an error communicating with the server.");
+      }
     }
     return false;
   },
@@ -43,27 +47,28 @@ const BackendClient = {
       if (response.status === 200) {
         registerSuccessHandler();
       } else {
-        registerFailureHandler("User already exists");
+        registerFailureHandler("An error occurred. Please try again later.");
       }
     } catch (error) {
       registerFailureHandler("An error occurred. Please try again later.");
     }
   },
 
-  accountDetails: (successHandler, failureHandler) => {
+  getAccountDetails: async () => {
     try {
-      axios
-        .get(`${url}/account-details`, {
-          headers: {
-            ...headers,
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          successHandler(response.data);
-        });
+      const response = await axios.get(`${url}/account-details`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        return {};
+      }
     } catch (error) {
-      failureHandler(error);
+      return {};
     }
   },
 
@@ -131,26 +136,22 @@ const BackendClient = {
   },
 
   getIntakes(successHandler, failureHandler) {
-    try {
-      axios
-        .get(`${url}/intake`, {
-          headers: {
-            ...headers,
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          params: {
-            date: new Date().toJSON().slice(0, 10),
-          },
-        })
-        .then((response) => {
-          successHandler(response.data);
-        })
-        .catch(() => {
-          failureHandler("Something went wrong.");
-        });
-    } catch (error) {
-      failureHandler("Something went wrong.");
-    }
+    axios
+      .get(`${url}/intake`, {
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        params: {
+          date: new Date().toJSON().slice(0, 10),
+        },
+      })
+      .then((response) => {
+        successHandler(response.data);
+      })
+      .catch((error) => {
+        failureHandler("Something went wrong. Network error.");
+      });
   },
 
   async getIntakeById(intakeId) {
@@ -206,58 +207,36 @@ const BackendClient = {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
       return response.data;
     } catch (err) {
       return [];
     }
   },
 
-  async getFoodById(foodId) {
-    try {
-      const response = await axios.get(`${url}/food/${foodId}`, {
-        headers: {
-          ...headers,
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      return response.data;
-    } catch (err) {
-      return false;
-    }
-  },
-
   addFood(body, successHandler, failureHandler) {
-    try {
-      axios
-        .post(
-          `${url}/food`,
-          { ...body },
-          {
-            headers: {
-              ...headers,
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(successHandler)
-        .catch(failureHandler);
-    } catch (error) {
-      failureHandler(error);
-    }
+    axios
+      .post(
+        `${url}/food`,
+        { ...body },
+        {
+          headers: {
+            ...headers,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(successHandler)
+      .catch(failureHandler);
   },
 
   post: async (endpoint, formData) => {
     try {
-      const response = await axios.post(`${url}/${endpoint}`, formData, {
+      return await axios.post(`${url}/${endpoint}`, formData, {
         headers: {
           ...headers,
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
-      return response;
     } catch (error) {
       return false;
     }

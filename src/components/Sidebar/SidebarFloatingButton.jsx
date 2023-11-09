@@ -6,7 +6,7 @@ const SidebarFloatingButton = (props) => {
     const { sidebarHandler } = props;
 
     return (
-        <Fab title="sidebar-button" onClick={sidebarHandler} sx={{
+        <Fab id="sidebar-floating-button" title="sidebar-button" onClick={sidebarHandler} sx={{
             position: 'fixed',
         }}>
             <ArrowForwardIosTwoToneIcon />

@@ -21,7 +21,7 @@ const IntakeDialog = (props) => {
 
   useEffect(() => {
     getFoodOptionsData();
-  }, [getFoodOptionsData, isUpdate]);
+  }, [getFoodOptionsData]);
 
   useEffect(() => {
     if (isUpdate.current && foodOptions.length > 0) {
@@ -73,10 +73,15 @@ const IntakeDialog = (props) => {
     [setQuantity]
   );
 
-  const addFoodCloseHandler = useCallback(() => {
-    getFoodOptionsData();
+  const addFoodCloseHandler = useCallback(async (newState) => {
+    if (newState) {
+      setFood(newState.name);
+      setSelectedFoodData(newState);
+    }
+    const foodOptionsData = await BackendClient.getFoodOptions();
+    setFoodOptions(foodOptionsData);
     setShowFoodDialog(false);
-  }, [setShowFoodDialog, getFoodOptionsData]);
+  }, [setShowFoodDialog, setFoodOptions, setSelectedFoodData, setFood, foodOptions]);
 
   const deleteFoodHandler = useCallback(async () => {
     if (selectedFoodData) {
@@ -137,6 +142,7 @@ const IntakeDialog = (props) => {
       size="md"
     >
       <FormContainer
+        id="intake-form"
         size={12}
         error={error}
         formFields={[
@@ -153,8 +159,8 @@ const IntakeDialog = (props) => {
                 <StyledTextField {...params} label="Food" />
               )}
             ></Autocomplete>
-            <Button onClick={() => setShowFoodDialog(true)}>Edit</Button>
-            <Button onClick={() => deleteFoodHandler()}>Delete</Button>
+            <Button id="edit-food-button" onClick={() => setShowFoodDialog(true)}>Edit</Button>
+            <Button id="delete-food-button" onClick={() => deleteFoodHandler()}>Delete</Button>
           </FormGroup>,
           <StyledTextField
             id="quantity"
@@ -169,10 +175,16 @@ const IntakeDialog = (props) => {
         buttons={
           isUpdate.current
             ? [
-                <Button variant="contained" onClick={submitHandler} fullWidth>
+                <Button
+                  id="update-button"
+                  variant="contained"
+                  onClick={submitHandler}
+                  fullWidth
+                >
                   Update
                 </Button>,
                 <Button
+                  id="cancel-button"
                   variant="outlined"
                   onClick={() => setShowDialog(false)}
                   fullWidth
@@ -182,16 +194,23 @@ const IntakeDialog = (props) => {
               ]
             : [
                 <Button
+                  id="add-food-button"
                   variant="outlined"
                   onClick={() => setShowFoodDialog(true)}
                   fullWidth
                 >
                   Add Food
                 </Button>,
-                <Button variant="contained" onClick={submitHandler} fullWidth>
+                <Button
+                  id="add-button"
+                  variant="contained"
+                  onClick={submitHandler}
+                  fullWidth
+                >
                   Submit
                 </Button>,
                 <Button
+                  id="cancel-button"
                   variant="outlined"
                   onClick={() => setShowDialog(false)}
                   fullWidth
@@ -206,6 +225,7 @@ const IntakeDialog = (props) => {
           foodData={selectedFoodData}
           showDialog={showFoodDialog}
           addFoodCloseHandler={addFoodCloseHandler}
+          setFood={setFood}
         ></FoodDialog>
       )}
     </DialogContainer>

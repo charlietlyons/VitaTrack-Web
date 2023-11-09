@@ -32,10 +32,10 @@ export const PageContainer = (props) => {
 };
 
 export const FormContainer = (props) => {
-  const { title, size, formFields, buttons, error, footerLink } = props;
+  const { id, title, size, formFields, buttons, error, footerLink } = props;
 
   return (
-    <Grid container justifyContent="center" alignItems="center">
+    <Grid id={id} container justifyContent="center" alignItems="center">
       <Grid item xs={size || 8}>
         <Card>
           <CardHeader title={title} />
@@ -57,9 +57,15 @@ export const FormContainer = (props) => {
               );
             })}
 
-            {error && <output data-testid="form-error">{error}</output>}
+            {error && (
+              <output id={`form-error-${id}`} data-testid="form-error">
+                {error}
+              </output>
+            )}
             {footerLink && (
-              <Link onClick={footerLink.onClick}>{footerLink.text}</Link>
+              <Link id={footerLink.id} onClick={footerLink.onClick}>
+                {footerLink.text}
+              </Link>
             )}
           </CardContent>
         </Card>

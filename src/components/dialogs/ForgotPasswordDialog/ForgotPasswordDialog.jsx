@@ -11,14 +11,13 @@ const ForgotPasswordDialog = (props) => {
 
   const submitHandler = useCallback(async () => {
     const response = await BackendClient.sendForgotPasswordEmail(email);
-    if (response && response.status === 200) {
+    if (response) {
       setShowDialog(false);
     } else {
       setError("An error occurred.");
     }
   }, [setError, setShowDialog, email]);
 
-  // 13-17,32-37
   return (
     <DialogContainer
       title="Forgot Password"
@@ -26,6 +25,7 @@ const ForgotPasswordDialog = (props) => {
       showDialog={showDialog}
     >
       <FormContainer
+        id="forgot-password-form"
         formFields={[
           <TextField
             value={email}

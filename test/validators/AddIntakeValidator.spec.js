@@ -17,20 +17,20 @@ describe("checkForEmpties", () => {
     expect(setErrorMock).not.toHaveBeenCalled();
   });
 
-  it("should return false if foodinput is empty", () => {
-    const setErrorMock = jest.fn();
+  // it("should return false if foodinput is empty", () => {
+  //   const setErrorMock = jest.fn();
 
-    expect(
-      AddIntakeValidator.validate(
-        {
-          foodId: "",
-          quantity: "1",
-        },
-        setErrorMock
-      )
-    ).toBe(false);
-    expect(setErrorMock).toHaveBeenCalled();
-  });
+  //   expect(
+  //     AddIntakeValidator.validate(
+  //       {
+  //         foodId: "",
+  //         quantity: "1",
+  //       },
+  //       setErrorMock
+  //     )
+  //   ).toBe(false);
+  //   expect(setErrorMock).toHaveBeenCalled();
+  // });
 
   it("should return false if quantity is empty", () => {
     const setErrorMock = jest.fn();

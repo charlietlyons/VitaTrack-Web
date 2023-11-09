@@ -1,14 +1,27 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import DailyStats from "../../src/components/DailyStats";
 import React from "react";
 import "@testing-library/jest-dom";
 import { MockAuthContextProvider } from "../context/MockAuthContext";
-import axios from "axios";
-
-jest.mock("axios");
+import BackendClient from "../../src/client/BackendClient";
 
 describe("DailyStats", () => {
+  beforeEach(() => {
+    BackendClient.getIntakes = jest.fn().mockImplementation((success, fail) => {
+      success([
+        {
+          name: "test",
+          quantity: "test",
+          calories: "test",
+          protein: "test",
+          carbs: "test",
+          fat: "test",
+        },
+      ]);
+    });
+  });
+
   it("should display login page if isLoggedIn is false", () => {
     render(
       <MockAuthContextProvider isLoggedIn={false}>
@@ -45,29 +58,10 @@ describe("DailyStats", () => {
 
     const foodInput = screen.getByLabelText(/Food/i);
     expect(foodInput).toBeInTheDocument();
-});
+  });
 
-  it("should set intakes on page load", async () => {
-    axios.post.mockReturnValue({
-      status: 200,
-    });
-
-    axios.get.mockImplementation(() =>
-      Promise.resolve({
-        data: [
-          {
-            name: "test",
-            quantity: "test",
-            calories: "test",
-            protein: "test",
-            carbs: "test",
-            fat: "test",
-          },
-        ],
-      })
-    );
-
-    await act(async () => {
+  it("should set intakes on page load", () => {
+    act(() => {
       render(
         <MockAuthContextProvider isLoggedIn={true}>
           <DailyStats />
@@ -75,7 +69,7 @@ describe("DailyStats", () => {
       );
     });
 
-    const intakeElement = await screen.findByTestId("intake-0");
+    const intakeElement = screen.getByTestId("intake-0");
     expect(intakeElement).toBeInTheDocument();
   });
 });

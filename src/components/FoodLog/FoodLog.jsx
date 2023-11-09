@@ -74,7 +74,9 @@ const FoodLog = (props) => {
       </Table>
     </>
   ) : (
-    <output data-testid="error">{error}</output>
+    <output id="daily-log-error" data-testid="error">
+      {error}
+    </output>
   );
 };
 

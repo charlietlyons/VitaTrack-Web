@@ -331,10 +331,6 @@ describe("FoodDialog", () => {
     });
 
     it("should setError to Something went wrong, if patchFood call fails", async () => {
-      BackendClient.getFoodById = jest.fn().mockImplementationOnce((foodId) => {
-        return testPayload;
-      });
-
       BackendClient.update = jest.fn().mockImplementation(() => {
         return false;
       });

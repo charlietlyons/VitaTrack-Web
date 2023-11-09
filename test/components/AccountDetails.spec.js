@@ -3,7 +3,9 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom";
 import { MockAuthContextProvider } from "../context/MockAuthContext";
+import BackendClient from "../../src/client/BackendClient";
 import { act } from "react-dom/test-utils";
+import { waitFor } from "@testing-library/react";
 
 describe("AccountDetails", () => {
   it("should show login screen when not loggedIn", () => {
@@ -31,7 +33,14 @@ describe("AccountDetails", () => {
   });
 
   it("should show update password dialog when change password button is clicked", async () => {
-    await act(async () => {
+    act(() => {
+      BackendClient.getAccountDetails = jest.fn().mockResolvedValue({
+        email: "hey",
+        firstName: "  ",
+        lastName: "  ",
+        phone: "  ",
+      });
+
       render(
         <MockAuthContextProvider isLoggedIn={true}>
           <AccountDetails />
@@ -39,12 +48,18 @@ describe("AccountDetails", () => {
       );
     });
 
-    const updatePasswordButton = screen.getByRole("button", {
+    await waitFor(() => {
+      expect(BackendClient.getAccountDetails).toHaveBeenCalled();
+    });
+
+    const updatePasswordButton = await screen.getByRole("button", {
       name: "Change Password",
     });
 
-    updatePasswordButton.click();
-
+    act(() => {
+      updatePasswordButton.click();
+    })
+    
     const updatePasswordHeading = await screen.findByText(
       /Enter your new password/i
     );

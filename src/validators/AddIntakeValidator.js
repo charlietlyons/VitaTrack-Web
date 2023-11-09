@@ -2,9 +2,7 @@ import { setErrorAndReturnFalse } from "../components/common/util/setErrorAndRet
 
 const AddIntakeValidator = {
   validate: (state, setError) => {
-    if (state.foodId === "") {
-      return setErrorAndReturnFalse("Food is required", setError);
-    } else if (state.quantity === "") {
+    if (state.quantity === "") {
       return setErrorAndReturnFalse("Quantity is required", setError);
     }
     return true;

@@ -67,6 +67,7 @@ const Login = () => {
       )}
       {!isLoggedIn ? (
         <FormContainer
+          id="login-form"
           title={!isLoggedIn && <Heading1>Login</Heading1>}
           formFields={[
             <StyledTextField
@@ -84,12 +85,17 @@ const Login = () => {
             ></StyledTextField>,
           ]}
           buttons={[
-            <Button variant="contained" onClick={submitHandler}>
+            <Button
+              id="login-submit"
+              variant="contained"
+              onClick={submitHandler}
+            >
               Login
             </Button>,
           ]}
           error={error}
           footerLink={{
+            id: "forgot-password",
             text: "Forgot Password?",
             onClick: () => setShowForgotPasswordDialog(true),
           }}

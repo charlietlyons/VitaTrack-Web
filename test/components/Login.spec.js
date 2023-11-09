@@ -8,11 +8,17 @@ import BackendClient from "../../src/client/BackendClient";
 import { BrowserRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
 
+// TODO: fix this test and test loader
 describe("Login", () => {
   describe("isLoggedIn is false", () => {
     beforeEach(async () => {
       jest.resetAllMocks();
-      await act(() => {
+      BackendClient.login = jest.fn().mockImplementationOnce(() => {
+        return Promise.resolve({
+          status: 200,
+        });
+      });
+      act(() => {
         render(
           <MockAuthContextProvider isLoggedIn={false}>
             <Login />
